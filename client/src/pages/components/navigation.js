@@ -11,9 +11,9 @@ export default function Navigation({currentPage, setCurrentPage}){
             <ul>
                 <li>
                     <a 
-                    href="#add-wine" 
-                    onClick={() => setCurrentPage("AddWine")}
-                    className={currentPage === "AddWine" ? "nav-link active" : "nav-link"}
+                    href="#add" 
+                    onClick={() => setCurrentPage("Add")}
+                    className={currentPage === "Add" ? "nav-link active" : "nav-link"}
                     >
                         Add Wine
                     </a>
