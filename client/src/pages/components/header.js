@@ -11,7 +11,7 @@ export default function HeaderContainer({currentPage, setCurrentPage}) {
 
     return (
         <>
-        <button class="logoBtn" onClick={setCurrentPage("Home")}>
+        <button class="logoBtn" onClick={setCurrentPage("Dashboard")}>
             <img id="main-logo" src={logo} alt="Wine Report" height="200px" width="auto"/>
         </button>
         
