@@ -37,8 +37,7 @@ class AuthService {
     }
 }
 
-// const AuthProvider = new AuthService();
-// export default AuthProvider;
+// let AuthProvider; export default AuthProvider = new AuthService();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new AuthService();
