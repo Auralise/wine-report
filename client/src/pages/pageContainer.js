@@ -11,7 +11,7 @@ import HeaderContainer from "./components/header";
 import Dashboard from "./dashboard";
 import AddWine from "./addWine";
 import Storage from "./storage";
-import SearchResults from "./searchResults";
+import SearchResults from "./results";
 
 
 export default function PageContainer() {
