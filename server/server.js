@@ -1,10 +1,16 @@
-import express from "express";
+//Server package imports
+import * as express from "express";
 import { ApolloServer } from "@apollo/server";
-import path from "path";
+import * as path from "path";
 import { authMiddleware } from "./utils/auth";
 
+// configuration imports
 import { typeDefs, resolvers } from "./schemas";
 import db from "./config/connection";
+
+//Environment config
+import * as dotenv from "dotenv";
+dotenv.config()
 
 const PORT = process.env.port || 3001;
 const app = express();
