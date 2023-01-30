@@ -2,10 +2,10 @@
 import * as express from "express";
 import { ApolloServer } from "@apollo/server";
 import * as path from "path";
-import { authMiddleware } from "./utils/auth";
+import { authMiddleware } from "./utils/auth.js";
 
 // configuration imports
-import { typeDefs, resolvers } from "./schemas";
+import { typeDefs, resolvers } from "./schemas/index.js";
 import db from "./config/connection";
 
 //Environment config
