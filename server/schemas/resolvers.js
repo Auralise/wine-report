@@ -1,10 +1,10 @@
 import { GraphQLError } from "graphql";
 //TODO: Import Models
-import { signToken } from "../utils/auth";
+import { signToken } from "../utils/auth.js";
 
 const resolvers = {
  //Stuff goes here
 }
 
 
-module.exports = resolvers;
+export default resolvers;
