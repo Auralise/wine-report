@@ -1,5 +1,4 @@
-import { Schema, model } from "mongoose";
-
+import { Schema, model, } from "mongoose";
 
 const locationQuantitySchema = new Schema({
     location: {
@@ -13,7 +12,6 @@ const locationQuantitySchema = new Schema({
     }
 
 });
-
 
 const wineSchema = new Schema({
     name: {
@@ -36,7 +34,7 @@ const wineSchema = new Schema({
              required: false,
         }
     ],
-    wineryRegion: {
+    region: {
         type: Schema.Types.ObjectId,
         ref: "Region",
         required: true,
@@ -52,9 +50,10 @@ const wineSchema = new Schema({
     category: {
         type: String,
         enum: ["Red", "White", "Fortified", "Sparkling", "Rose", "Dessert"],
-
-    }
+    },
     
+});
 
+const Wine = model("Wine", wineSchema);
 
-})
+export default Wine;
