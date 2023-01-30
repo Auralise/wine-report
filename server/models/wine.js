@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 
-const storageQuantity = new Schema({
+const locationQuantitySchema = new Schema({
     location: {
         type: Schema.Types.ObjectId,
         ref: "StorageShelf",
@@ -36,13 +36,22 @@ const wineSchema = new Schema({
              required: false,
         }
     ],
-    region: {
-
+    wineryRegion: {
+        type: Schema.Types.ObjectId,
+        ref: "Region",
+        required: true,
     },
-    producer: {
-
-    },
-    storage: {
+    producer: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: "Producer",
+            required: true
+        }
+    ],
+    location: [locationQuantitySchema],
+    category: {
+        type: String,
+        enum: ["Red", "White", "Fortified", "Sparkling", "Rose", "Dessert"],
 
     }
     
