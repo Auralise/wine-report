@@ -1,4 +1,5 @@
 import { Schema, model, } from "mongoose";
+import Comment from "./Comment.js";
 
 const locationQuantitySchema = new Schema({
     location: {
@@ -52,6 +53,7 @@ const wineSchema = new Schema({
         enum: ["Red", "White", "Fortified", "Sparkling", "Rose", "Dessert"],
         required: true,
     },
+    comments: [Comment]
     
 });
 
