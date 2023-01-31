@@ -3,7 +3,7 @@ import { getDateObject } from "../utils/dateFormat.js";
 
 
 const commentSchema = new Schema({
-    comment: {
+    content: {
         type: String,
         minLength: 1,
         maxLength: 500,
