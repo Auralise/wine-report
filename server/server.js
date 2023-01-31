@@ -37,32 +37,48 @@ const server = new ApolloServer({
 });
 
 const startApolloServer = async (typeDefs, resolvers) => {
+    
     // Provide file targets for express to serve
     if (process.env.NODE_ENV === "production") {
         app.use(express.static(path.join(__dirname, "../client/build")));
     }
-
+    
     app.get("/", (req, res) => {
         res.sendFile(path.join(__dirname, "../client/build/index.html"));
     });
 
-    await server.start();
-    // Configure the auth middleware
-    app.use(
-        "/gql",
-        cors(),
-        json(),
-        expressMiddleware(server, {
-            context: authMiddleware,
-        })
-    );
 
+    db.on("error", (error) => {
+        console.error("db connection error: ", error);
+        return;
+    });
+
+    db.on("disconnect", () => {
+        console.warn("Disconnected from the database");
+    });
+
+    db.on("reconnected", () => {
+        console.log("Successfully reconnected to the database");
+    })
+    
+    
     db.once("open", async () => {
         console.log("Attempting to start server");
 
+        await server.start();
+        // Configure the auth middleware
+        app.use(
+            "/gql",
+            cors(),
+            json(),
+            expressMiddleware(server, {
+                context: authMiddleware,
+            })
+        );
+        
         await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
         console.log(`Server ready and listening at http://localhost:${PORT}`);
-        console.log(`GraphQL accessible at htto://localhost:${PORT}/gql`);
+        console.log(`GraphQL accessible at http://localhost:${PORT}/gql`);
 
         // app.listen(PORT, () => {
         //     console.log(`API server running on port ${PORT}`);
