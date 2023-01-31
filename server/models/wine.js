@@ -50,6 +50,7 @@ const wineSchema = new Schema({
     category: {
         type: String,
         enum: ["Red", "White", "Fortified", "Sparkling", "Rose", "Dessert"],
+        required: true,
     },
     
 });
