@@ -1,5 +1,5 @@
 import Wine from "./wine.js";
-import Comment from "./Comment.js";
+import Comment from "./comment.js";
 import Producer from "./producer.js";
 import Region from "./region.js";
 import StorageLocation from "./storage.js";

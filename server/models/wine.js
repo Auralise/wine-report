@@ -1,5 +1,5 @@
 import { Schema, model, } from "mongoose";
-import Comment from "./Comment.js";
+import Comment from "./comment.js";
 
 const locationQuantitySchema = new Schema({
     location: {
