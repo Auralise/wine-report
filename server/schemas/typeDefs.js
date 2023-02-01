@@ -90,14 +90,14 @@ const typeDefs = `#graphql
     type Query {
         user(email: String!): User
         me: User
-        wines(variety: [String], region: String, winery: String, vintage: Int, category: String, producer: String): [Wine]
+        
+        wine(variety: [String], region: String, winery: String, vintage: Int, category: String, producer: String): [Wine]!
         specificWine(id: ID!): Wine
 
-        varieties(id: ID, name: String): [Variety]
-        regions(id: ID, name: String): [Region]
-        producers(id: ID, name: String): [Producer]
+        varieties(id: ID, name: String): [Variety]!
+        regions(id: ID, name: String): [Region]!
+        producers(id: ID, name: String): [Producer]!
         
-
         storageFacilities: [StorageFacility]
         storageRooms(facilityId: String!): [StorageRoom]
         storageUnits(roomId: String!): [StorageUnit]
@@ -109,11 +109,22 @@ const typeDefs = `#graphql
         login(email: String!, password: String!): Auth
 
         addWine(name: String!, vintage: Int, variety: [ID], region: ID!, category: String!, producer: ID!): Wine
+        editWine(wineId: ID!, name: String, vintage: Int, variety: [ID], region: ID, category: String, producer: ID): Wine
+        removeWine(wineId: ID!): Wine
         changeQuantity(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
+
         addProducer(name: String!, email: String, phone: String): Producer
+        editProducer(producerId: ID!, name: String, email: String, phone: String): Producer
+        
         addRegion(name: String!, country: String!): Region
+        editRegion(regionId: ID!, name: String, country: String): Region
+
         addVariety(name: String!): Variety
+        editVariety(varietyId: ID, name: String): Variety
+        
         addComment(contents: String!): Wine
+        editComment(commentId: ID!): Wine
+        removeComment(commentId: ID!): Wine
 
         addStorageFacility(name: String!, description: String): StorageFacility
         addStorageRoom(facilityId: ID, name: String!, description: String): StorageRoom
