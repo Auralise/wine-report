@@ -27,11 +27,30 @@ const resolvers = {
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
-        varieties: async (parent, { id, name }) => {
+        varieties: async (parent, { id, name }, context) => {
+            if (context.user) {
+                // if passed an ID, attempt to find by id
+                if (id) {
+                    return [Variety.findById(id)];
+                }
+
+                return Variety.find({ name });
+            }
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
-        regions: async (parent, ) => {
+        regions: async (parent, { id, name }, context) => {
+            if (context.user) {
+                return id ? [Region.findById(id)] : Region.find({ name });
+            }
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+        },
 
+        producers: async (parent, {id, name}, context) => {
+            if (context.user) {
+                return id ? [Producer.findById(id)]: Producer.find({name});
+            }
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         }
     },
 
