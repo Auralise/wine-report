@@ -22,8 +22,16 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum: ["Owner", "Manager", "User", "Guest"],
+        // This is configured this way for demonstration purposes and will be different once a user management system is developed
+        default: "Owner",
         required: true,
 
+    },
+    approved: {
+        type: Boolean,
+        // This is configured this way for demonstration purposes and will be different once a user management system is developed
+        default: true,
+        required: true,
     }
 });
 

@@ -6,6 +6,7 @@ const typeDefs = `#graphql
         name: String
         email: String
         role: String
+        approved: Boolean
     }
 
     type Auth {
@@ -88,6 +89,7 @@ const typeDefs = `#graphql
 
     #Queries
     type Query {
+        users: [User]
         user(email: String!): User
         me: User
         
@@ -106,6 +108,7 @@ const typeDefs = `#graphql
     }
 
     type Mutation {
+        addUser(name: String!, email: String!): Auth
         login(email: String!, password: String!): Auth
 
         addWine(name: String!, vintage: Int, variety: [ID], region: ID!, category: String!, producer: ID!): Wine
