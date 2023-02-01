@@ -81,7 +81,7 @@ const typeDefs = `#graphql
         vintage: Int
         variety: [Variety!]
         region: Region! 
-        winery: Producer!
+        producer: Producer!
         comments: [Comment!]
         location: [StorageQuantity!]
         category: String!
@@ -93,7 +93,7 @@ const typeDefs = `#graphql
         user(email: String!): User
         me: User
         
-        wine(variety: [String], region: String, winery: String, vintage: Int, category: String, producer: String): [Wine]!
+        wine(searchTerm: String, type: String): [Wine]!
         specificWine(id: ID!): Wine
 
         varieties(id: ID, name: String): [Variety]!
@@ -112,20 +112,20 @@ const typeDefs = `#graphql
         login(email: String!, password: String!): Auth
 
         addWine(name: String!, vintage: Int, variety: [ID], region: ID!, category: String!, producer: ID!): Wine
-        editWine(wineId: ID!, name: String, vintage: Int, variety: [ID], region: ID, category: String, producer: ID): Wine
+        updateWine(wineId: ID!, name: String, vintage: Int, variety: [ID], region: ID, category: String, producer: ID): Wine
         removeWine(wineId: ID!): Wine
         changeQuantity(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
 
         addProducer(name: String!, email: String, phone: String): Producer
-        editProducer(producerId: ID!, name: String, email: String, phone: String): Producer
+        updateProducer(producerId: ID!, name: String, email: String, phone: String): Producer
         
         addRegion(name: String!, country: String!): Region
-        editRegion(regionId: ID!, name: String, country: String): Region
+        updateRegion(regionId: ID!, name: String, country: String): Region
 
         addVariety(name: String!): Variety
-        editVariety(varietyId: ID, name: String): Variety
+        updateVariety(varietyId: ID, name: String): Variety
         
-        addComment(contents: String!): Wine
+        addComment(wineId: ID!, contents: String!): Wine
         editComment(commentId: ID!): Wine
         removeComment(commentId: ID!): Wine
 
