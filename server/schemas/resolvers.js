@@ -2,6 +2,8 @@ import { GraphQLError } from "graphql";
 
 import { Wine, Comment, Producer, Region, StorageLocation, User, Variety } from "../models/index.js";
 
+import { userValidation } from "../utils/validation.js";
+
 import { signToken } from "../utils/auth.js";
 
 const resolvers = {
@@ -157,7 +159,16 @@ const resolvers = {
     Mutation: {
         //Non authenticated endpoints
         // Further development decision on allowing administrators to add users 
-        addUser: async (parent, { name, email }) => {
+        addUser: async (parent, { fullName, email, password }) => {
+            try {
+                if (userValidation(fullName, email, password)){
+                    const user = User.create({name: fullName, email, password});
+
+
+                }
+            } catch (e) {
+                throw new GraphQLError(e.message, { extensions: { code: "VALIDATION_ERROR" } });
+            }
 
         },
 
