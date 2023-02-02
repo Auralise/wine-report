@@ -111,7 +111,7 @@ const typeDefs = `#graphql
         addUser(fullName: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
 
-        addWine(name: String!, vintage: Int, variety: [ID], region: ID!, category: String!, producer: ID!): Wine
+        addWine(name: String!, vintage: Int, variety: [ID], region: ID!, category: String!, producer: ID!, location: ID, quantity: Int): Wine
         updateWine(wineId: ID!, name: String, vintage: Int, variety: [ID], region: ID, category: String, producer: ID): Wine
         removeWine(wineId: ID!): Wine
         changeQuantity(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
