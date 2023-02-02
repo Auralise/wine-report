@@ -15,30 +15,9 @@ const typeDefs = `#graphql
     }
 
     #Storage components
-    type StorageFacility {
+    type Storage {
         _id: ID!
-        name: String!
-        description: String
-        rooms: [StorageRoom!]
-    }
-
-    type StorageRoom {
-        _id: ID!
-        name: String!
-        description: String
-        units: [StorageUnit!]
-    }
-
-    type StorageUnit {
-        _id: ID!
-        name: String!
-        description: String
-        shelves: [StorageShelf!]
-    }
-
-    type StorageShelf {
-        _id: ID!
-        name: String!
+        locationName: String!
         description: String
     }
 
@@ -79,7 +58,7 @@ const typeDefs = `#graphql
         _id: ID!
         name: String!
         vintage: Int
-        variety: [Variety!]
+        variety: Variety!
         region: Region! 
         producer: Producer!
         comments: [Comment!]
@@ -100,19 +79,16 @@ const typeDefs = `#graphql
         regions(id: ID, name: String): [Region]!
         producers(id: ID, name: String): [Producer]!
         
-        storageFacilities: [StorageFacility]
-        storageRooms(facilityId: String!): [StorageRoom]
-        storageUnits(roomId: String!): [StorageUnit]
-        storageShelf(unitId: String!): [StorageShelf]
-        allWinesInLocation(locationId: String!): [Wine]
+        storage(id: ID, locationName: String): Storage
+        allWinesInLocation(locationId: ID!): [Wine]
     }
 
     type Mutation {
         addUser(fullName: String!, email: String!, password: String!): Auth
         login(email: String!, password: String!): Auth
 
-        addWine(name: String!, vintage: Int, variety: [ID], region: ID!, category: String!, producer: ID!, location: ID, quantity: Int): Wine
-        updateWine(wineId: ID!, name: String, vintage: Int, variety: [ID], region: ID, category: String, producer: ID): Wine
+        addWine(name: String!, vintage: Int, variety: ID, region: ID!, category: String!, producer: ID!, location: ID!, quantity: Int!): Wine
+        updateWine(wineId: ID!, name: String, vintage: Int, variety: ID, region: ID, category: String, producer: ID): Wine
         removeWine(wineId: ID!): Wine
         changeQuantity(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
 
@@ -129,10 +105,7 @@ const typeDefs = `#graphql
         editComment(commentId: ID!): Wine
         removeComment(commentId: ID!): Wine
 
-        addStorageFacility(name: String!, description: String): StorageFacility
-        addStorageRoom(facilityId: ID, name: String!, description: String): StorageRoom
-        addStorageUnit(roomId: ID, name: String!, description: String): StorageUnit
-        addStorageShelf(unitId: ID, name: String!, description: String): StorageShelf
+        addStorage(locationName: String!, locationRoom: String!, description: String): Storage
 
     }
 

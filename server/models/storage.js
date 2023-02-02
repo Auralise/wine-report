@@ -1,12 +1,19 @@
 import { Schema, model } from "mongoose";
 
-const shelfSchema = new Schema({
-    name: {
+const storageSchema = new Schema({
+    locationName: {
         type: String,
+        unique: true,
         required: true,
         minlength: 2,
         maxlength: 200,
         
+    },
+    locationRoom: {
+        type:String,
+        required: true,
+        minlength: 2,
+        maxlength: 200,
     },
     description: {
         type: String,
@@ -14,52 +21,8 @@ const shelfSchema = new Schema({
     }
 });
 
-const storageUnitSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 200,
-        
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    shelves: [shelfSchema],
-});
+// A proper tiered storage solution is part of future development
 
-const storageRoomSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 200,
-        
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    units: [storageUnitSchema],
-});
+const Storage = model("Storage", storageSchema);
 
-const storageFacilitySchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 2,
-        maxlength: 200,
-        
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    rooms: [storageRoomSchema],
-});
-
-
-const StorageLocation = model("StorageLocation", storageFacilitySchema);
-
-export default StorageLocation;
+export default Storage;

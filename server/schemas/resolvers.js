@@ -1,6 +1,6 @@
 import { GraphQLError } from "graphql";
 
-import { Wine, Comment, Producer, Region, StorageLocation, User, Variety } from "../models/index.js";
+import { Wine, Producer, Region, Storage, User, Variety } from "../models/index.js";
 
 import { userValidation } from "../utils/validation.js";
 
@@ -202,8 +202,18 @@ const resolvers = {
 
         // Authenticated mutations
         //Wine 
-        addWine: async (parent, { name, vintage, variety, region, category, producer }, context) => {
-            
+        // { name, vintage, variety, region, category, producer }
+        addWine: async (parent, args, context) => {
+            // if(context.user) {
+            //     try {
+
+            //     } catch (e) {
+            //         throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}})
+            //     }
+            // }
+
+            //  throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+
         },
 
         updateWine: async (parent, { wineId, name, vintage, variety, region, category, producer }, context) => {
@@ -211,6 +221,21 @@ const resolvers = {
         },
 
         removeWine: async (parent, { wineId }, context) => {
+            if (context.user){
+                try {
+                    const wine = await Wine.findById(wineId);
+
+                    if (!wine) throw new Error("No wine with this ID found");
+
+                    return await wine.remove();
+
+
+                } catch (e) {
+                    throw new GraphQLError(e.message, {extensions: {code: "NO_TARGET"}})
+                }
+                
+            }
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
@@ -220,7 +245,16 @@ const resolvers = {
 
         // Producer
         addProducer: async (parent, { name, email, phone }, context) => {
+            if(context.user){
+                try {
 
+
+                } catch (e) {
+
+                }
+            } 
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         updateProducer: async (parent, { producerId, name, email, phone }, context) => {
@@ -257,18 +291,9 @@ const resolvers = {
 
         },
 
-        addStorageFacility: async (parent, { name, description }, context) => {
-
-        },
-        addStorageRoom: async (parent, { facilityId, name, description }, context) => {
-
-        },
-        addStorageUnit: async (parent, { roomId, name, description }, context) => {
-
-        },
-        addStorageShelf: async (parent, { unitId, name, description }, context) => {
-
-        },
+        addStorage: async (parent, { locationName, locationRoom, description}, context) => {
+            
+        }
 
 
     }

@@ -3,7 +3,7 @@ import { Schema, model, } from "mongoose";
 const locationQuantitySchema = new Schema({
     location: {
         type: Schema.Types.ObjectId,
-        ref: "StorageShelf",
+        ref: "Storage",
         required: true
     },
     quantity: {
@@ -37,8 +37,8 @@ const wineSchema = new Schema({
     name: {
         type: String,
         required: true,
-        minlength: 1,
-        maxlength: 200,
+        minlength: 2,
+        maxlength: 100,
         trim: true,
     },
     vintage: {
@@ -48,25 +48,21 @@ const wineSchema = new Schema({
         required: false,
 
     },
-    variety: [
-        {
+    variety: {
              type: Schema.Types.ObjectId,
              ref: "Variety",
              required: false,
-        }
-    ],
+    },
     region: {
         type: Schema.Types.ObjectId,
         ref: "Region",
         required: true,
     },
-    producer: [
-        {
+    producer: {
             type: Schema.Types.ObjectId,
             ref: "Producer",
             required: true
-        }
-    ],
+    },
     location: [locationQuantitySchema],
     category: {
         type: String,
