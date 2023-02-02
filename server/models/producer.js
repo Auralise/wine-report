@@ -5,12 +5,12 @@ const producerSchema = new Schema({
         type: String,
         required: true,
         unique: true,
-        minlength: [2, "Please provide a winery name longer than 2 characters"],
+        minlength: [3, "Please provide a winery name longer than 3 characters"],
         maxlength: [50, "Please provide a winery name shorter than 50 characters"],
     },
     email: {
         type: String,
-        match: [/.+@.+\..+/, "Must match an email address"],
+        match: [/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, "Must match an email address"],
         required: false,
     },
     phone: {
