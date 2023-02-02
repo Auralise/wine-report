@@ -18,6 +18,7 @@ const typeDefs = `#graphql
     type Storage {
         _id: ID!
         locationName: String!
+        locationRoom: String!
         description: String
     }
 
@@ -50,7 +51,7 @@ const typeDefs = `#graphql
     # Structure for quantity in storage - If quantity > 0 then location can not be null - To be handled in the resolver
     # Noteably, this may require some re-work to appropriately locate wines in the storage tree
     type StorageQuantity {
-        location: StorageShelf
+        location: Storage!
         quantity: Int!
     }
 
@@ -88,9 +89,9 @@ const typeDefs = `#graphql
         login(email: String!, password: String!): Auth
 
         addWine(name: String!, vintage: Int, variety: ID, region: ID!, category: String!, producer: ID!, location: ID!, quantity: Int!): Wine
-        updateWine(wineId: ID!, name: String, vintage: Int, variety: ID, region: ID, category: String, producer: ID): Wine
+        updateWineDetails(wineId: ID!, name: String, vintage: Int, variety: ID, region: ID, category: String, producer: ID): Wine
         removeWine(wineId: ID!): Wine
-        changeQuantity(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
+        updateWineStorage(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
 
         addProducer(name: String!, email: String, phone: String): Producer
         updateProducer(producerId: ID!, name: String, email: String, phone: String): Producer
@@ -102,8 +103,7 @@ const typeDefs = `#graphql
         updateVariety(varietyId: ID, name: String): Variety
         
         addComment(wineId: ID!, contents: String!): Wine
-        editComment(commentId: ID!): Wine
-        removeComment(commentId: ID!): Wine
+        removeComment(wineId: ID!, commentId: ID!): Wine
 
         addStorage(locationName: String!, locationRoom: String!, description: String): Storage
 

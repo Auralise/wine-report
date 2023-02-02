@@ -1,8 +1,8 @@
-import { GraphQLError } from "graphql";
+import { graphql, GraphQLError } from "graphql";
 
 import { Wine, Producer, Region, Storage, User, Variety } from "../models/index.js";
 
-import { userValidation } from "../utils/validation.js";
+import { userValidation, wineValidation, isValidEmail } from "../utils/validation.js";
 
 import { signToken } from "../utils/auth.js";
 
@@ -107,42 +107,40 @@ const resolvers = {
 
         specificWine: async (parent, { id }, context) => {
             if (context.user) {
-                return Wine.findById(id);
+                const wine = Wine.findById(id);
+                
+                if(!wine){
+                    throw new GraphQLError("No wine found by this ID", {extensions: {code: "NOT_FOUND"}});
+                }
+                
+                return wine;
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
-        storageFacilities: async (parent, args, context) => {
+        storage: async (parent, {id, locationName}, context) => {
             if (context.user) {
-                return Wine.findById(id);
+                let storage;
+                if(id){
+                    storage = Storage.findById(id);
+                } else if (locationName){
+                    storage = Storage.findOne({
+                        locationName
+                    })
+                } else {
+                    throw new GraphQLError("Please provide either an ID or a locationName");
+                }
+
+                if (!storage){
+                    throw new GraphQLError("No Storage found.", { extensions: {code: "NOT_FOUND"}});
+                } 
+                
+                return storage;
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
 
-        storageRooms: async (parent, { facilityId }, context) => {
-            if (context.user) {
-                return Wine.findById(id);
-            }
-
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
-
-        storageUnits: async (parent, { roomId }, context) => {
-            if (context.user) {
-                return Wine.findById(id);
-            }
-
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
-
-        storageShelf: async (parent, { unitId }, context) => {
-            if (context.user) {
-                return Wine.findById(id);
-            }
-
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         allWinesInLocation: async (parent, { locationId }, context) => {
@@ -202,21 +200,43 @@ const resolvers = {
 
         // Authenticated mutations
         //Wine 
-        // { name, vintage, variety, region, category, producer }
+        
         addWine: async (parent, args, context) => {
-            // if(context.user) {
-            //     try {
+            if(context.user) {
+                try {
+                    if(wineValidation(args)){
+                        const wine = await Wine.create({
+                            name: args.name,
+                            vintage: args.vintage || null,
+                            variety: args.variety || null,
+                            region: args.region,
+                            producer: args.producer,
+                            locationStorage: {
+                                location: args.location,
+                                quantity: args.quantity,
+                            },
+                            category: args.quantity,
+                            comments: []
+                        });
 
-            //     } catch (e) {
-            //         throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}})
-            //     }
-            // }
+                        return wine;
+                    }
 
-            //  throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+                } catch (e) {
+                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}})
+                }
+            }
+
+             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
-        updateWine: async (parent, { wineId, name, vintage, variety, region, category, producer }, context) => {
+        updateWineDetails: async (parent, { wineId, name, vintage, variety, region, category, producer }, context) => {
+            if (context.user) {
+
+            }
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
@@ -239,7 +259,7 @@ const resolvers = {
 
         },
 
-        changeQuantity: async (parent, { wineId, storageId, quantityChange: Int }, context) => {
+        updateWineStorage: async (parent, { wineId, storageId, quantityChange: Int }, context) => {
 
         },
 
@@ -247,10 +267,26 @@ const resolvers = {
         addProducer: async (parent, { name, email, phone }, context) => {
             if(context.user){
                 try {
+                    if (name.length < 3 || name.length > 50){
+                        throw new Error("Please provide a name for the producer between 3 and 50 characters in length");
+                    }
 
+                    if (!isValidEmail(email)){
+                        throw new Error("Please provide a valid email");
+                    }
+
+                    if (!phone.test(/^\+?[0-9]{6,12}]/)){
+                        throw new Error("Please provide a valid phone number");
+                    }
+
+                    await Producer.create({
+                        name,
+                        email: email || null,
+                        phone: phone || null
+                    })
 
                 } catch (e) {
-
+                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}});
                 }
             } 
 
@@ -263,7 +299,27 @@ const resolvers = {
 
         //Region
         addRegion: async (parent, { name, country }, context) => {
+            if(context.user){
+                try {
+                    if (!name || name.length < 3 || name.length > 50){
+                        throw new Error("Please provide a name for the region between 3 and 50 characters in length");
+                    }
 
+                    if (!country || country.length < 3 || country.length > 50){
+                        throw new Error("Please provide a country name or country code between 2 and 50 characters long");
+                    }
+
+                    await Region.create({
+                        name,
+                        countryName: country,
+                    })
+
+                } catch (e) {
+                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}});
+                }
+            } 
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         updateRegion: async (parent, { regionId, name, country }, context) => {
@@ -271,7 +327,22 @@ const resolvers = {
         },
 
         addVariety: async (parent, { name }, context) => {
+            if(context.user){
+                try {
+                    if (name.length < 2 || name.length > 50){
+                        throw new Error("Please provide a name for the Variety between 2 and 50 characters in length");
+                    }
 
+                    await Variety.create({
+                        name
+                    })
+
+                } catch (e) {
+                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}});
+                }
+            } 
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         updateVariety: async (parent, { varietyId, name }, context) => {
@@ -280,19 +351,73 @@ const resolvers = {
 
         //Comments
         addComment: async (parent, { wineId, contents }, context) => {
+            if (context.user){
+                const wine = Wine.findById(wineId);
+                if(wine){
+                    if(contents.length < 1 || contents.length > 500){
+                        throw new GraphQLError("Please provide a comment between 1 and 500 characters in length");
+                    }
+                    const comment = { 
+                        content: contents,
+                        author: context.user.name
+                    }
+                    wine.comment.push(comment);
+                    await wine.save();
+                    return wine;
+
+                } else {
+                    throw new GraphQLError("No Wine by this ID found", {extensions: {code: ""}})
+                }
+            }
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
-        editComment: async (parent, { commentId }, context) => {
 
-        },
+        removeComment: async (parent, { wineId, commentId }, context) => {
+            if (!context.user){
+                const wine = Wine.findById(wineId);
+                if(!wine){
+                    throw new GraphQLError("No wine by this ID");
+                }
 
-        removeComment: async (parent, { commentId }, context) => {
+                wine.comment.pull(commentId).
+                wine.save();
+
+                return wine;
+
+            }
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
         addStorage: async (parent, { locationName, locationRoom, description}, context) => {
-            
+            if(!context.user) {
+                if(!locationName || locationName.length < 2 || locationName.length > 50 ){
+                    throw new GraphQLError("Please provide a location name longer than 2 characters but less than 50", {extensions: {code: "VALIDATION_ERROR"}});
+                }
+
+                if(!locationRoom || locationRoom.length < 2 || locationName.length > 50) {
+                    throw new GraphQLError("Please provide a room name longer thant 2 charcaters and less than 50", {extensions: {code: "VALIDATION_ERROR"}});
+                }
+
+                if(description.length > 500){
+                    throw new GraphQLError("Please provide a description shorter than 500 chracters", {extensions: {code: "VALIDATION_ERROR"}});
+                }
+
+                const newStorage = await Storage.create({
+                    locationName,
+                    locationRoom,
+                    description
+                })
+
+                return newStorage;
+
+            }
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+
         }
 
 

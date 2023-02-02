@@ -13,7 +13,7 @@ const isPasswordComplex = (password) => {
 }
 // Email validation regex from w3Schools: https://www.w3resource.com/javascript/form/email-validation.php
 // IETF compliant characters: https://www.rfc-editor.org/rfc/rfc3696#page-5
-const isValidEmail = (email) =>  email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) ? true : false;
+export const isValidEmail = (email) =>  email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) ? true : false;
 
 
 

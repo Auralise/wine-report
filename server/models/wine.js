@@ -63,7 +63,7 @@ const wineSchema = new Schema({
             ref: "Producer",
             required: true
     },
-    location: [locationQuantitySchema],
+    locationStorage: [locationQuantitySchema],
     category: {
         type: String,
         enum: ["Red", "White", "Fortified", "Sparkling", "Rose", "Dessert"],

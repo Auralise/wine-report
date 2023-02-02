@@ -6,18 +6,19 @@ const storageSchema = new Schema({
         unique: true,
         required: true,
         minlength: 2,
-        maxlength: 200,
+        maxlength: 50,
         
     },
     locationRoom: {
         type:String,
         required: true,
         minlength: 2,
-        maxlength: 200,
+        maxlength: 50,
     },
     description: {
         type: String,
         required: false,
+        maxlength: 200
     }
 });
 
