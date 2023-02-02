@@ -18,7 +18,7 @@ const storageSchema = new Schema({
     description: {
         type: String,
         required: false,
-        maxlength: 200
+        maxlength: 500
     }
 });
 
