@@ -173,13 +173,37 @@ const resolvers = {
         },
 
         login: async (parent, { email, password }) => {
+            const user = await User.findOne({email});
+            if(!user){
+                throw new GraphQLError("Incorrect Credentials", {extensions: {code: "UNAUTHORISED"}});
+            }
+
+            const validPassword = await user.isCorrectPassword(password);
+
+            if (!validPassword){
+                throw new GraphQLError("Incorrect Credentials", {extensions: {code: "UNAUTHORISED"}});
+            }
+
+            const token = signToken(user);
+
+            // Return auth object and excluding password field - There is likely a more elegant to do this.
+            return { 
+                token, 
+                user: {
+                    _id: user._id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                    approved: user.approved,
+                }
+            }
 
         },
 
         // Authenticated mutations
         //Wine 
         addWine: async (parent, { name, vintage, variety, region, category, producer }, context) => {
-
+            
         },
 
         updateWine: async (parent, { wineId, name, vintage, variety, region, category, producer }, context) => {
