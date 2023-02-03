@@ -6,6 +6,8 @@ import { userValidation, wineValidation, isValidEmail } from "../utils/validatio
 
 import { signToken } from "../utils/auth.js";
 
+import { getIds } from "../utils/searchHelpers.js";
+
 const resolvers = {
     Query: {
         users: async (parent, args, context) => {
@@ -89,45 +91,80 @@ const resolvers = {
         // Further development required to expand the search to handle multiple specific types
         wine: async (parent, { searchTerm, type }, context) => {
             if (context.user) {
-                const query = new RegExp(searchTerm, i)
+                let results;
+                let query;
+
+                if(searchTerm && !type || !searchTerm && type){
+                    throw new GraphQLError("Please provide a search term and a type or neither to get all wines", {extensions: {code: "BAD_REQUEST"}});
+                }
+
+                if (searchTerm) {
+                    query = new RegExp(searchTerm, "i");
+                } 
+
+                if(type){
+                    if(
+                        !type === "Region" &&
+                        !type === "Producer" &&
+                        !type === "Vintage" &&
+                        !type === "Category" &&
+                        !type === "Variety" &&
+                        !type === "Location" 
+                    ) {
+                        throw new GraphQLError("Invalid search type", {extensions: {code: "BAD_REQUEST"}});
+                    }
+                }
+                
                 switch (type) {
                     case "Region":
-                        return Wine.find({
-                            region: { $regex: query },
-                        })
+                        const regionIds = getIds(await Region.find({name: query}));
+
+                        results = await Wine.find({
+                            region: { $in: regionIds },
+                        }).populate("variety region producer locationStorage.location");
+                        break;
+
                     case "Producer":
-                        return Wine.find({
-                            producer: { $regex: query },
-                        })
+                        const producerIds = getIds(await Region.find({name: query}));
+
+                        results = await Wine.find({
+                            producer: { $in: producerIds },
+                        }).populate("variety region producer locationStorage.location");
+                        break;
+
                     case "Vintage":
-                        return Wine.find({
+                        results = await Wine.find({
                             vintage: { $regex: query },
-                        })
+                        }).populate("variety region producer locationStorage.location");
+                        break;
+
                     case "Category":
-                        return Wine.find({
+                        results = Wine.find({
                             category: { $regex: query },
-                        })
+                        }).populate("variety region producer locationStorage.location");
+                        break;
+
                     case "Variety":
-                        return Wine.find({
-                            variety: { $regex: query },
-                        })
+                        const varietyIds = getIds(await Variety.find({name: {$regex: query}}));
+                        results = Wine.find({
+                            variety: { $in: varietyIds },
+                        }).populate("variety region producer locationStorage.location");
+                        break;
+
                     case "Location":
-                        return Wine.find({
-                            location: { $regex: query },
-                        })
+                        const location = await Location.find({locationName: {$regex: query}});
+
+                        results = Wine.find({
+                            locationStorage: {location: location._id},
+                        }).populate("variety region producer locationStorage.location");
+                        break;
+
                     default:
-                        return Wine.find({
-                            $or: [
-                                { name: { $regex: query } },
-                                { vintage: { $regex: query } },
-                                { variety: { $regex: query } },
-                                { region: { $regex: query } },
-                                { producer: { $regex: query } },
-                                { location: { $regex: query } },
-                                { category: { $regex: query } }
-                            ]
-                        });
+                        //Find all wine
+                        results = Wine.find({}).populate("variety region producer locationStorage.location");
                 }
+
+                return results;
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
