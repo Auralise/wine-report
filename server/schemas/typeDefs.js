@@ -63,7 +63,7 @@ const typeDefs = `#graphql
         region: Region! 
         producer: Producer!
         comments: [Comment!]
-        location: [StorageQuantity!]
+        locationStorage: [StorageQuantity!]
         category: String!
     }
 
@@ -80,7 +80,7 @@ const typeDefs = `#graphql
         regions(id: ID, name: String): [Region]!
         producers(id: ID, name: String): [Producer]!
         
-        storage(id: ID, locationName: String): Storage
+        storage(id: ID, locationName: String): [Storage!]!
         allWinesInLocation(locationId: ID!): [Wine]
     }
 

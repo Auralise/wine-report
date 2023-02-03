@@ -63,7 +63,7 @@ export const wineValidation = (wineDetails) => {
     }
 
     const currentDate = new Date()
-    if(vintage < 1980 || vintage > currentDate.getFullYear()){
+    if(wineDetails.vintage < 1980 || wineDetails.vintage > currentDate.getFullYear()){
         throw new Error("Invalid vintage, needs to be between 1980 and the current date");
     }
 

@@ -1,10 +1,12 @@
-import * as jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-const secret = process.env.TOKEN_SECRET;
-const expiration = "1h";
+//Long expiration time on JWT as I have not yet implemented token refresh on activity 
+const expiration = "3h";
 
 export const authMiddleware = ({ req }) => {
     let token = req.body.token || req.query.token || req.headers.authorization;
+    const secret = process.env.TOKEN_SECRET;
+
 
     if (req.headers.authorization) {
         token = token.split(" ").pop().trim();
@@ -25,6 +27,7 @@ export const authMiddleware = ({ req }) => {
 }
 
 export const signToken = ({ email, username, _id }) => {
+    const secret = process.env.TOKEN_SECRET;
     const payload = { email, username, _id };
     return jwt.sign({ data: payload }, secret, { expiresIn: expiration });
 }

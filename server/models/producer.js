@@ -15,7 +15,7 @@ const producerSchema = new Schema({
     },
     phone: {
         type: String,
-        match: [/^\+?[0-9]{6,12}]/, "Please enter a phone number optionally starting with a + for international"],
+        match: [/^\+?[0-9]{6,12}/, "Please enter a phone number optionally starting with a + for international"],
         required: false,
     }
 });
