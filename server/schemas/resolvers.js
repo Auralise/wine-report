@@ -15,7 +15,7 @@ const resolvers = {
             }
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
-        user: async (parent, args, context) => {
+        user: async (parent, { email }, context) => {
             //Authorised only
             if (context.user) {
                 return User.findOne({ email });
@@ -24,7 +24,7 @@ const resolvers = {
         },
         me: async (parent, args, context) => {
             if (context.user) {
-                return User.findById(context.user._id)
+                return await User.findById(context.user._id)
             }
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
@@ -33,12 +33,12 @@ const resolvers = {
             if (context.user) {
                 // if passed an ID, attempt to find by id
                 let varieties = [];
-                if(id && name) {
-                    throw new GraphQLError("Please provide either an ID or a Name when searching varieties", {extensions: {code: "BAD_REQUEST"}});
+                if (id && name) {
+                    throw new GraphQLError("Please provide either an ID or a Name when searching varieties", { extensions: { code: "BAD_REQUEST" } });
                 } else if (id) {
                     varieties.push(await Variety.findById(id));
                 } else if (name) {
-                    varieties.push(await Variety.find({name}));
+                    varieties.push(await Variety.find({ name }));
                 } else {
                     varieties = await Variety.find({});
                 }
@@ -51,12 +51,12 @@ const resolvers = {
         regions: async (parent, { id, name }, context) => {
             if (context.user) {
                 let regions = [];
-                if(id && name){
-                    throw new GraphQLError("Please provide either an ID or a Name when searching regions", {extensions: {code: "BAD_REQUEST"}});
-                } else if (id){
+                if (id && name) {
+                    throw new GraphQLError("Please provide either an ID or a Name when searching regions", { extensions: { code: "BAD_REQUEST" } });
+                } else if (id) {
                     regions.push(await Region.findById(id));
                 } else if (name) {
-                    regions.push(await Region.find({name}));
+                    regions.push(await Region.find({ name }));
                 } else {
                     regions = Region.find({});
                 }
@@ -69,12 +69,12 @@ const resolvers = {
         producers: async (parent, { id, name }, context) => {
             if (context.user) {
                 let producers = [];
-                if(id && name){
-                    throw new GraphQLError("Please provide either an ID or a Name when searching producers", {extensions: {code: "BAD_REQUEST"}});
-                } else if (id){
+                if (id && name) {
+                    throw new GraphQLError("Please provide either an ID or a Name when searching producers", { extensions: { code: "BAD_REQUEST" } });
+                } else if (id) {
                     producers.push(await Producer.findById(id));
                 } else if (name) {
-                    producers.push(await Producer.find({name}));
+                    producers.push(await Producer.find({ name }));
                 } else {
                     producers = Producer.find({});
                 }
@@ -137,23 +137,23 @@ const resolvers = {
         specificWine: async (parent, { id }, context) => {
             if (context.user) {
                 const wine = Wine.findById(id);
-                
-                if(!wine){
-                    throw new GraphQLError("No wine found by this ID", {extensions: {code: "NOT_FOUND"}});
+
+                if (!wine) {
+                    throw new GraphQLError("No wine found by this ID", { extensions: { code: "NOT_FOUND" } });
                 }
-                
+
                 return wine;
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
-        storage: async (parent, {id, locationName}, context) => {
+        storage: async (parent, { id, locationName }, context) => {
             if (context.user) {
                 let storage;
-                if(id){
+                if (id) {
                     storage = [Storage.findById(id)];
-                } else if (locationName){
+                } else if (locationName) {
                     storage = [Storage.findOne({
                         locationName
                     })]
@@ -161,10 +161,10 @@ const resolvers = {
                     storage = Storage.find({});
                 }
 
-                if (!storage){
-                    throw new GraphQLError("No Storage found.", { extensions: {code: "NOT_FOUND"}});
-                } 
-                
+                if (!storage) {
+                    throw new GraphQLError("No Storage found.", { extensions: { code: "NOT_FOUND" } });
+                }
+
                 return storage;
             }
 
@@ -188,14 +188,14 @@ const resolvers = {
         // Further development decision on allowing administrators to add users 
         addUser: async (parent, { fullName, email, password }) => {
             try {
-                if (userValidation(fullName, email, password)){
-                    const user = await User.create({name: fullName, email, password});
-                    if (!user){
-                        throw new GraphQLError("Failed to create user", {extensions: {code: "SERVER_ERROR"}});
+                if (userValidation(fullName, email, password)) {
+                    const user = await User.create({ name: fullName, email, password });
+                    if (!user) {
+                        throw new GraphQLError("Failed to create user", { extensions: { code: "SERVER_ERROR" } });
                     }
                     const token = signToken({
                         name: user.name,
-                        email: user.email, 
+                        email: user.email,
                         _id: user._id,
                     });
 
@@ -218,22 +218,22 @@ const resolvers = {
         },
 
         login: async (parent, { email, password }) => {
-            const user = await User.findOne({email});
-            if(!user){
-                throw new GraphQLError("Incorrect Credentials", {extensions: {code: "UNAUTHORISED"}});
+            const user = await User.findOne({ email });
+            if (!user) {
+                throw new GraphQLError("Incorrect Credentials", { extensions: { code: "UNAUTHORISED" } });
             }
 
             const validPassword = await user.isCorrectPassword(password);
 
-            if (!validPassword){
-                throw new GraphQLError("Incorrect Credentials", {extensions: {code: "UNAUTHORISED"}});
+            if (!validPassword) {
+                throw new GraphQLError("Incorrect Credentials", { extensions: { code: "UNAUTHORISED" } });
             }
 
             const token = signToken(user);
 
             // Return auth object and excluding password field - There is likely a more elegant to do this.
-            return { 
-                token, 
+            return {
+                token,
                 user: {
                     _id: user._id,
                     name: user.name,
@@ -247,11 +247,11 @@ const resolvers = {
 
         // Authenticated mutations
         //Wine 
-        
+
         addWine: async (parent, args, context) => {
-            if(context.user) {
+            if (context.user) {
                 try {
-                    if(wineValidation(args)){
+                    if (wineValidation(args)) {
                         const wine = await Wine.create({
                             name: args.name,
                             vintage: args.vintage || null,
@@ -270,17 +270,17 @@ const resolvers = {
                     }
 
                 } catch (e) {
-                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}})
+                    throw new GraphQLError(e.message, { extensions: { code: "VALIDATION_ERROR" } })
                 }
             }
 
-             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
         updateWineDetails: async (parent, { wineId, name, vintage, variety, region, category, producer }, context) => {
             if (context.user) {
-                throw new GraphQLError("Not yet implemented", {extensions: {code: "NOT_IMPLEMENTED"}});
+                throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
@@ -288,7 +288,7 @@ const resolvers = {
         },
 
         removeWine: async (parent, { wineId }, context) => {
-            if (context.user){
+            if (context.user) {
                 try {
                     const wine = await Wine.findById(wineId);
 
@@ -298,31 +298,31 @@ const resolvers = {
 
 
                 } catch (e) {
-                    throw new GraphQLError(e.message, {extensions: {code: "NO_TARGET"}})
+                    throw new GraphQLError(e.message, { extensions: { code: "NO_TARGET" } })
                 }
-                
+
             }
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
 
         },
 
         updateWineStorage: async (parent, { wineId, storageId, quantityChange: Int }, context) => {
-            throw new GraphQLError("Not yet implemented", {extensions: {code: "NOT_IMPLEMENTED"}});
+            throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
         },
 
         // Producer
         addProducer: async (parent, { name, email, phone }, context) => {
-            if(context.user){
+            if (context.user) {
                 try {
-                    if (name.length < 3 || name.length > 50){
+                    if (name.length < 3 || name.length > 50) {
                         throw new Error("Please provide a name for the producer between 3 and 50 characters in length");
                     }
 
-                    if (!isValidEmail(email)){
+                    if (!isValidEmail(email)) {
                         throw new Error("Please provide a valid email");
                     }
 
-                    if (!phone.match(/^\+?[0-9]{6,12}/)){
+                    if (!phone.match(/^\+?[0-9]{6,12}/)) {
                         throw new Error("Please provide a valid phone number");
                     }
 
@@ -335,26 +335,26 @@ const resolvers = {
                     return producer;
 
                 } catch (e) {
-                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}});
+                    throw new GraphQLError(e.message, { extensions: { code: "VALIDATION_ERROR" } });
                 }
-            } 
+            }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         updateProducer: async (parent, { producerId, name, email, phone }, context) => {
-            throw new GraphQLError("Not yet implemented", {extensions: {code: "NOT_IMPLEMENTED"}});
+            throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
         },
 
         //Region
         addRegion: async (parent, { name, country }, context) => {
-            if(context.user){
+            if (context.user) {
                 try {
-                    if (!name || name.length < 3 || name.length > 50){
+                    if (!name || name.length < 3 || name.length > 50) {
                         throw new Error("Please provide a name for the region between 3 and 50 characters in length");
                     }
 
-                    if (!country || country.length < 3 || country.length > 50){
+                    if (!country || country.length < 3 || country.length > 50) {
                         throw new Error("Please provide a country name or country code between 2 and 50 characters long");
                     }
 
@@ -365,23 +365,23 @@ const resolvers = {
 
                     return region;
 
-                    
+
                 } catch (e) {
-                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}});
+                    throw new GraphQLError(e.message, { extensions: { code: "VALIDATION_ERROR" } });
                 }
-            } 
+            }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         updateRegion: async (parent, { regionId, name, country }, context) => {
-            throw new GraphQLError("Not yet implemented", {extensions: {code: "NOT_IMPLEMENTED"}});
+            throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
         },
 
         addVariety: async (parent, { name }, context) => {
-            if(context.user){
+            if (context.user) {
                 try {
-                    if (name.length < 2 || name.length > 50){
+                    if (name.length < 2 || name.length > 50) {
                         throw new Error("Please provide a name for the Variety between 2 and 50 characters in length");
                     }
 
@@ -392,27 +392,27 @@ const resolvers = {
                     return variety;
 
                 } catch (e) {
-                    throw new GraphQLError(e.message, {extensions: {code: "VALIDATION_ERROR"}});
+                    throw new GraphQLError(e.message, { extensions: { code: "VALIDATION_ERROR" } });
                 }
-            } 
+            }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
         },
 
         updateVariety: async (parent, { varietyId, name }, context) => {
-            throw new GraphQLError("Not yet implemented", {extensions: {code: "NOT_IMPLEMENTED"}});
+            throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
 
         },
 
         //Comments
         addComment: async (parent, { wineId, contents }, context) => {
-            if (context.user){
+            if (context.user) {
                 const wine = Wine.findById(wineId);
-                if(wine){
-                    if(contents.length < 1 || contents.length > 500){
+                if (wine) {
+                    if (contents.length < 1 || contents.length > 500) {
                         throw new GraphQLError("Please provide a comment between 1 and 500 characters in length");
                     }
-                    const comment = { 
+                    const comment = {
                         content: contents,
                         author: context.user.name
                     }
@@ -421,7 +421,7 @@ const resolvers = {
                     return wine;
 
                 } else {
-                    throw new GraphQLError("No Wine by this ID found", {extensions: {code: ""}})
+                    throw new GraphQLError("No Wine by this ID found", { extensions: { code: "" } })
                 }
             }
 
@@ -431,9 +431,9 @@ const resolvers = {
 
 
         removeComment: async (parent, { wineId, commentId }, context) => {
-            if (context.user){
+            if (context.user) {
                 const wine = Wine.findById(wineId);
-                if(!wine){
+                if (!wine) {
                     throw new GraphQLError("No wine by this ID");
                 }
 
@@ -447,18 +447,18 @@ const resolvers = {
 
         },
 
-        addStorage: async (parent, { locationName, locationRoom, description}, context) => {
-            if(context.user) {
-                if(!locationName || locationName.length < 2 || locationName.length > 50 ){
-                    throw new GraphQLError("Please provide a location name longer than 2 characters but less than 50", {extensions: {code: "VALIDATION_ERROR"}});
+        addStorage: async (parent, { locationName, locationRoom, description }, context) => {
+            if (context.user) {
+                if (!locationName || locationName.length < 2 || locationName.length > 50) {
+                    throw new GraphQLError("Please provide a location name longer than 2 characters but less than 50", { extensions: { code: "VALIDATION_ERROR" } });
                 }
 
-                if(!locationRoom || locationRoom.length < 2 || locationName.length > 50) {
-                    throw new GraphQLError("Please provide a room name longer thant 2 charcaters and less than 50", {extensions: {code: "VALIDATION_ERROR"}});
+                if (!locationRoom || locationRoom.length < 2 || locationName.length > 50) {
+                    throw new GraphQLError("Please provide a room name longer thant 2 charcaters and less than 50", { extensions: { code: "VALIDATION_ERROR" } });
                 }
 
-                if(description && description.length > 500){
-                    throw new GraphQLError("Please provide a description shorter than 500 chracters", {extensions: {code: "VALIDATION_ERROR"}});
+                if (description && description.length > 500) {
+                    throw new GraphQLError("Please provide a description shorter than 500 chracters", { extensions: { code: "VALIDATION_ERROR" } });
                 }
 
                 const newStorage = await Storage.create({
