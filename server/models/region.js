@@ -1,14 +1,14 @@
 import { Schema, model } from "mongoose";
 
 const regionSchema = new Schema({
-    regionName: {
+    name: {
         type: String,
         required: true,
         unique: true,
         minlength: [3, "Please provide a region name longer than 3 characters"],
         maxlength: [50, "Please shorten the region name to below 50 characters"]
     },
-    countryName: {
+    country: {
         type: String,
         required: true,
         default: "Australia",
