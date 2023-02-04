@@ -1,6 +1,3 @@
-// Theoretically retain for CSS
-// import './App.css';
-
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 // Import pages/components 
