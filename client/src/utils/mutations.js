@@ -17,8 +17,8 @@ export const ADD_USER = gql`
 `;
 
 export const LOGIN = gql`
-    mutation Login($loginEmail2: String!, $loginPassword2: String!) {
-        login(email: $loginEmail2, password: $loginPassword2) {
+    mutation Login($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
         token
         user {
             _id
@@ -164,7 +164,7 @@ export const REMOVE_WINE = gql`
 `;
 
 export const UPDATE_STORAGE_QUANTITY = gql`
-    mutation UpdateStorageQuantity ($wineId: ID, $storageId: ID, quantityChange: Int){
+    mutation UpdateStorageQuantity ($wineId: ID, $storageId: ID, $quantityChange: Int){
         updateWineStorage(wineId: $wineId, storageId: $storageId, quantityChange: $quantityChange){
             _id
             name

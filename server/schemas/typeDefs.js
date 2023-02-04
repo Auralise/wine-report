@@ -69,7 +69,7 @@ const typeDefs = `#graphql
 
     #Queries
     type Query {
-        users: [User]
+        users: [User]!
         user(email: String!): User
         me: User
         
@@ -90,6 +90,7 @@ const typeDefs = `#graphql
 
         addWine(name: String!, vintage: Int, variety: ID, region: ID!, category: String!, producer: ID!, location: ID!, quantity: Int!): Wine
         updateWineDetails(wineId: ID!, name: String, vintage: Int, variety: ID, region: ID, category: String, producer: ID): Wine
+        
         removeWine(wineId: ID!): Wine
         updateWineStorage(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
 
