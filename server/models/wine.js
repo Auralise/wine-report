@@ -1,4 +1,5 @@
 import { Schema, model, } from "mongoose";
+import { getDateObject } from "../utils/dateFormat.js";
 
 const locationQuantitySchema = new Schema({
     location: {
@@ -29,7 +30,7 @@ const commentSchema = new Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        get: (timestamp) => getDateObject(timestamp),
+        get: (timestamp) => getDateObject(timestamp, { twelveHourFormat:true, shortMonthName: true }),
     }
 });
 
@@ -49,9 +50,9 @@ const wineSchema = new Schema({
 
     },
     variety: {
-             type: Schema.Types.ObjectId,
-             ref: "Variety",
-             required: false,
+        type: Schema.Types.ObjectId,
+        ref: "Variety",
+        required: false,
     },
     region: {
         type: Schema.Types.ObjectId,
@@ -59,9 +60,9 @@ const wineSchema = new Schema({
         required: true,
     },
     producer: {
-            type: Schema.Types.ObjectId,
-            ref: "Producer",
-            required: true
+        type: Schema.Types.ObjectId,
+        ref: "Producer",
+        required: true
     },
     locationStorage: [locationQuantitySchema],
     category: {
@@ -70,7 +71,7 @@ const wineSchema = new Schema({
         required: true,
     },
     comments: [commentSchema]
-    
+
 });
 
 const Wine = model("Wine", wineSchema);

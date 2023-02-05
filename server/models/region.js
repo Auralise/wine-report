@@ -4,7 +4,7 @@ const regionSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true,
+        unique: "Please provide a unique region name",
         minlength: [3, "Please provide a region name longer than 3 characters"],
         maxlength: [50, "Please shorten the region name to below 50 characters"]
     },

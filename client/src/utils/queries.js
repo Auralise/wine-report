@@ -25,9 +25,9 @@ export const GET_SPECIFIC_USER = gql`
     }
 `;
 
-export const GET_CURRENT_USER = gql`
-    query get
-`;
+// export const GET_CURRENT_USER = gql`
+//     query get
+// `;
 
 export const GET_ALL_PRODUCERS = gql`
     query getAllProducers {
@@ -203,8 +203,8 @@ export const SEARCH_WINE = gql`
   
   
 export const GET_SINGLE_WINE = gql`
-    query getSingleWine($id: ID){
-      wine {
+    query getSingleWine($id: ID!){
+      specificWine(id: $id) {
         _id
         name
         vintage
@@ -229,6 +229,9 @@ export const GET_SINGLE_WINE = gql`
           author {
             _id
             name
+            email
+            role
+            approved
           }
           createdAt
         }
@@ -243,6 +246,5 @@ export const GET_SINGLE_WINE = gql`
         }
         category
       }
-    }
     }
 `;

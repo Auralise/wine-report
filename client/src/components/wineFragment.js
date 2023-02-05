@@ -18,7 +18,7 @@ const Wine = styled(Paper)(() => ({
 
 export default function WineFragment({ wine }) {
     return (
-        <Link href={`/wine/${wine._id}`} underline="none">
+        <Link id={wine._id} href={`/wine/${wine._id}`} underline="none">
             <Wine>
                 <img src="https://via.placeholder.com/150" alt="Placeholder for wine" />
                 <Box ml={5} sx={{

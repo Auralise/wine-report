@@ -121,7 +121,7 @@ const resolvers = {
 
                         results = await Wine.find({
                             region: { $in: regionIds },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Producer":
@@ -129,26 +129,26 @@ const resolvers = {
 
                         results = await Wine.find({
                             producer: { $in: producerIds },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Vintage":
                         results = await Wine.find({
                             vintage: { $regex: query },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Category":
                         results = Wine.find({
                             category: { $regex: query },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Variety":
                         const varietyIds = getIds(await Variety.find({name: {$regex: query}}));
                         results = Wine.find({
                             variety: { $in: varietyIds },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Location":
@@ -156,12 +156,12 @@ const resolvers = {
 
                         results = Wine.find({
                             locationStorage: {location: location._id},
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     default:
                         //Find all wine
-                        results = Wine.find({}).populate("variety region producer locationStorage.location");
+                        results = Wine.find({}).populate("variety region producer locationStorage.location comments.author");
                 }
 
                 return results;
@@ -174,12 +174,12 @@ const resolvers = {
         specificWine: async (parent, { id }, context) => {
             if (context.user) {
                 const wine = Wine.findById(id);
-
+                console.log(context.user);
                 if (!wine) {
                     throw new GraphQLError("No wine found by this ID", { extensions: { code: "NOT_FOUND" } });
                 }
 
-                return await wine.populate("variety region producer locationStorage.location");
+                return await wine.populate("variety region producer locationStorage.location comments.author");
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
@@ -307,7 +307,7 @@ const resolvers = {
                             comments: []
                         });
 
-                        return await wine.populate("variety region producer locationStorage.location");
+                        return await wine.populate("variety region producer locationStorage.location comments.author");
                     }
 
                 } catch (e) {
@@ -400,8 +400,8 @@ const resolvers = {
                     }
 
                     const region = await Region.create({
-                        name,
-                        country,
+                        name: name,
+                        country: country,
                     });
 
                     return region;
@@ -455,11 +455,11 @@ const resolvers = {
                     }
                     const comment = {
                         content: contents,
-                        author: context.user.name
+                        author: context.user._id
                     }
-                    wine.comment.push(comment);
-                    await wine.save();
-                    return wine;
+                    const newWine = await Wine.findByIdAndUpdate(wineId, { $push: {comments: comment}}, {new: true}).populate("variety region producer locationStorage.location comments.author");
+                    
+                    return newWine;
 
                 } else {
                     throw new GraphQLError("No Wine by this ID found", { extensions: { code: "" } })
