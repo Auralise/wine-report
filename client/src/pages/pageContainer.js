@@ -1,20 +1,27 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Container from "@mui/material/Container";
 
 
 import Auth from "../utils/auth";
 
 // TODO: import other components
-import HeaderContainer from "../components/header";
+import Header from "../components/header";
+import Navigation from "../components/navigation"
 
 
 //Import pages to render
 import Dashboard from "./dashboard";
-import AddWine from "./addWine";
-import Storage from "./storage";
+import AddStorage from "./addStorage";
 import SearchResults from "./results";
 import SingleWine from "./singleWine"
+
+import AddWine from "./addWine";
+import AddProducer from "./addProducer";
+import AddVariety from "./addVariety";
+import AddRegion from "./addRegion";
 
 import LoginPage from "./login";
 import Register from "./register";
@@ -22,59 +29,74 @@ import Register from "./register";
 export default function PageContainer() {
     const [currentPage, setCurrentPage] = useState("Home");
 
-    
-
     const [searchTerms, setSearchTerms] = useState("");
 
 
-    const renderPage = () => {
-        switch(currentPage) {
-            case "Dashboard": 
-                return <Dashboard />
-            case "Add":
-                return <AddWine />
-            case "Storage":
-                return <Storage />
-            case "Results":
-                // Getting search results to pass as props
-                return <SearchResults />
-            default: 
-                return <Dashboard />
-        }
-    }
+
 
     return (
         // currently using fragments, this can be made into a DOM element if needed for an overall wrapper
         <>
-            <HeaderContainer currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            <Container component="header" maxWidth="false" sx={{
+                backgroundColor: "#A9DEF9",
+                width: "100%",
+            }}>
+                <Header />
+                <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+            </Container>
             <Router>
                 <Routes>
                     {Auth.loggedIn() ? (
-                    <>
-                        <Route 
-                            path="/"
-                            element={<Dashboard />}
-                        />
-                        <Route
-                            path="/results"
-                            element={<SearchResults />}
-                        />
-                        <Route
-                            path="/wine/:wineId"
-                            element={<SingleWine />}
-                        />
+                        <>
+                            <Route
+                                path="/"
+                                element={<Dashboard />}
+                            />
+                            <Route
+                                path="/results"
+                                element={<SearchResults />}
+                            />
+                            <Route
+                                path="/wine/:wineId"
+                                element={<SingleWine />}
+                            />
+                            <Route
+                                path="/add-storage"
+                                element={<AddStorage />}
+                            />
+                            <Route
+                                path="/add-wine"
+                                element={<AddWine />}
+                            />
+                            <Route
+                                path="/add-producer"
+                                element={<AddProducer />}
+                            />
+                            <Route
+                                path="/add-region"
+                                element={<AddRegion />}
+                            />
+                            <Route
+                                path="/add-variety"
+                                element={<AddVariety />}
+                            />
 
-                    </>
+
+                        </>
 
                     ) : (
                         <>
                             <Route
                                 path="/"
-                                element={<LoginPage /> }
+                                element={<LoginPage />}
                             />
                             <Route
-                                path="/signup"
+                                path="/register"
                                 element={<Register />}
+                            />
+                            <Route
+                                path="*"
+                                element={<LoginPage />}
                             />
                         </>
                     )}
@@ -84,10 +106,10 @@ export default function PageContainer() {
 
                 </Routes>
 
-            </Router>    
+            </Router>
             <footer>
 
-            </footer>   
+            </footer>
         </>
     )
 }

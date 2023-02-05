@@ -1,72 +1,125 @@
-import React from "react";
+import React, {useState} from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Fade from "@mui/material/Fade";
+import CssBaseline from "@mui/material/CssBaseline";
+
+import Auth from "../utils/auth";
+import { borderRadius } from "@mui/system";
 
 
+const navButtonClass = {
 
-export default function Navigation({currentPage, setCurrentPage}){
+}
 
-//TODO: Add conditional rendering to show these options only if logged in
-//TODO: Additionally, possibly convert these to NavLinks from react router 
-//NOTE: Current items in this file are placeholders to allow for something to display during development and are going to be changed
+export default function Navigation({ currentPage, setCurrentPage }) {
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [viewAnchorEl, setViewAnchorEl] = useState(null)
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+
+
     return (
         <Container component="nav" maxWidth="lg">
+            <CssBaseline />
             <Box component="ul" sx={{
                 display: "flex",
                 listStyle: "none",
-                justifyContent: "space-evenly"
+                justifyContent: "space-evenly",
+                padding: "5px 0",
+                border: "solid"
             }}>
-                <li>
-                    <a 
-                    href="#add" 
-                    onClick={() => setCurrentPage("Add")}
-                    className={currentPage === "Add" ? "nav-link active" : "nav-link"}
-                    >
-                        Add Wine
-                    </a>
-                </li>
+                {Auth.loggedIn() ? (
+                    <>
+                        <Button
+                            id="menu-button"
+                            aria-controls={open ? "menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={handleClick}
+                            sx={{
+                                flex: "1 1",
+                            }}
+                        >
+                            My Cellar
+                        </Button>
+                        <Menu
+                            id="menu"
+                            MenuListProps={{
+                                "aria-labelledby": "menu-button"
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            TransitionComponent={Fade}
+                            sx={{
+                                padding: "0 10px",
+                            }}
+                        >
+                            <MenuItem href="/view-producer" onClick={setCurrentPage("ViewProducer")}>View Producer</MenuItem>
+                            <MenuItem href="/view-region" onClick={setCurrentPage("ViewRegion")}>View Region</MenuItem>
+                            <MenuItem href="/view-storage" onClick={setCurrentPage("ViewStorage")}>View Storage</MenuItem>
+                            <MenuItem href="/view-variety" onClick={setCurrentPage("ViewVariety")}>View Variety</MenuItem>
+                            <Divider />
+                            <MenuItem href="/add-wine" onClick={setCurrentPage("AddWine")}><strong>Add Wine</strong></MenuItem>
+                            <MenuItem href="/add-producer" onClick={setCurrentPage("AddProducer")}>Add Producer</MenuItem>
+                            <MenuItem href="/add-region" onClick={setCurrentPage("AddRegion")}>Add Region</MenuItem>
+                            <MenuItem href="/add-storage" onClick={setCurrentPage("AddStorage")}>Add Storage</MenuItem>
+                            <MenuItem hrew="/add-variety" onClick={setCurrentPage("AddVariety")}>Add Variety</MenuItem>
+                        </Menu>
+                        <Button 
+                            href="/search"
+                            onClick={setCurrentPage("AdvancedSearch")}
+                        >Advanced Search</Button>
 
-                <li>
-                    <a 
-                    href="#storage"
-                    onClick={()=> setCurrentPage("Storage")}
-                    className={currentPage === "Storage" ? "nav-link active" : "nav-link"}
-                    >
-                        Storage
-                    </a>
-                </li>
+                        <Button
+                            href="/"
+                            onClick={() => {
+                                //set the page state back to login
+                                setCurrentPage("Login");
+                                Auth.logout();
+                            }}
+                            sx={{
+                                flex: "1 1",
+                            }}
+                        >
+                            Logout
+                        </Button>
+                    </>
+                ) : (
+                    <>
+                        <Button
+                            href="/"
+                            sx={{
+                                flex: "1 1",
+                            }}
+                        >
+                            Login
+                        </Button>
+                        <Button
+                            href="/register"
+                            sx={{
+                                flex: "1 1",
+                            }}
+                        >
+                            Register
+                        </Button>
 
-                <li>
-                    <a 
-                    href="#reports"
-                    onClick={()=> setCurrentPage("Reports")}
-                    className={currentPage === "Reports" ? "nav-link active" : "nav-link"}
-                    >
-                        Reports
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                    href="#logout"
-                    onClick={() => setCurrentPage("Logout")}
-                    >
-                        Logout
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                    href="#login"
-                    onClick={() => setCurrentPage("Login")}
-                    className={currentPage === "Login" ? "nav-link active" : "nav-link"}
-
-                    >
-                        Login
-                    </a>
-                </li>
+                    </>
+                )
+                }
             </Box>
         </Container>
     )

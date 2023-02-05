@@ -1,21 +1,18 @@
+// Package imports
 import React, { useState } from "react";
+import { useMutation } from "@apollo/client";
 
+// UI Component imports
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Checkbox from '@mui/material/Checkbox';
-
 import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+// local deps
 import Auth from "../utils/auth";
-
-import { useMutation } from "@apollo/client";
-
 import { LOGIN } from "../utils/mutations";
 
 
@@ -45,6 +42,7 @@ export default function LoginPage() {
             Auth.login(data.login.token);
         } catch (e) {
             console.error(e);
+            setErrorMessage(e.message);
             //todo: write error to 
         }
 
@@ -104,6 +102,20 @@ export default function LoginPage() {
                     >
                         Sign In
                     </Button>
+
+                    <Typography component="div" sx={{
+                            color: "red",
+                            minHeight: "1em"
+                        }}
+                    >
+                            {errorMessage && (errorMessage)}
+                    </Typography>
+
+                    <Typography component="div">
+                        Don't have an account?  
+                    <Link href="/register" underline="always" sx={{ ml: "5px"}}>Sign up!</Link>
+                    </Typography>
+
                 </Box>
                 
 

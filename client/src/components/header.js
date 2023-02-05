@@ -15,7 +15,7 @@ import logo from "../images/logo.png";
 const logoStyle = {
     marginTop: "5px",
     width: "10vw",
-    maxWidth: "125px",
+    maxWidth: "100px",
     height: "auto"
 }
 
@@ -44,7 +44,7 @@ export default function Header() {
                             Wine Report
                         </Typography>
                         :
-                        <Typography component="h1" variant="h1" sx={{
+                        <Typography component="h1" variant="h2" sx={{
                             ml: 1
                         }}>
                             Wine Report
