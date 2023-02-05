@@ -14,8 +14,8 @@ import logo from "../images/logo.png";
 
 const logoStyle = {
     marginTop: "5px",
-    width: "15vw",
-    maxWidth: "200px",
+    width: "10vw",
+    maxWidth: "125px",
     height: "auto"
 }
 
