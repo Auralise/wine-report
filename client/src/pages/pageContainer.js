@@ -31,9 +31,6 @@ export default function PageContainer() {
 
     const [searchTerms, setSearchTerms] = useState("");
 
-
-
-
     return (
         // currently using fragments, this can be made into a DOM element if needed for an overall wrapper
         <>
