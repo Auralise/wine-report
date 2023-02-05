@@ -29,6 +29,7 @@ export default function Header() {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    padding: "0 10px"
                 }}
                 >
                     <Link href="/" underline="none">
