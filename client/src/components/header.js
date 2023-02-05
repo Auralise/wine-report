@@ -1,45 +1,61 @@
+// Package imports
 import React from "react";
+
+// UI component imports
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
-
-// import nav component to be used in header
-import Navigation from "./navigation";
+import CssBaseline  from "@mui/material/CssBaseline";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 // import logo image
 import logo from "../images/logo.png";
 
-export default function HeaderContainer({currentPage, setCurrentPage}) {
+const logoStyle = {
+    marginTop: "5px",
+    width: "15vw",
+    maxWidth: "200px",
+    height: "auto"
+}
 
-
+export default function Header() {
+    const matches = useMediaQuery("(max-width: 800px)", {noSsr: true});
     return (
         
-        <Container component="header" maxWidth="false" sx={{
-            backgroundColor: "#A9DEF9",
-            width: "100%",
-        }}>
             <Container component="div" maxWidth="lg">
-            <Box sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                border:"solid"
-                
-            }}
-            >
-                <Link href="/" underline="none">
-                    <img id="main-logo" src={logo} alt="Wine Report" height="200px" width="auto"/>
-                </Link>
+                <CssBaseline />
+                <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+                >
+                    <Link href="/" underline="none">
+                        <img id="main-logo" src={logo} alt="Wine Report"  style={logoStyle}/>
+                    </Link>
 
-                <Typography component="h1" variant="h1">
-                    Wine Report
-                </Typography>
-                
-            </Box>
-                <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+
+                    {matches ?
+                        <Typography component="h1" variant="h1" sx={{
+                            fontSize: "12vw",
+                            ml: 1
+                        }}>
+                            Wine Report
+                        </Typography>
+                        :
+                        <Typography component="h1" variant="h1" sx={{
+                            ml: 1
+                        }}>
+                            Wine Report
+                        </Typography>
+                    }
+                    
+
+                </Box>
+
             </Container>
-        </Container>
+        
         
     )
 
