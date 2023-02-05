@@ -68,7 +68,7 @@ const startApolloServer = async (typeDefs, resolvers) => {
         await server.start();
         // Configure the auth middleware
         app.use(
-            "/gql",
+            "/graphql",
             cors(),
             json(),
             expressMiddleware(server, {

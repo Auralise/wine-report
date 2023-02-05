@@ -179,7 +179,7 @@ const resolvers = {
                     throw new GraphQLError("No wine found by this ID", { extensions: { code: "NOT_FOUND" } });
                 }
 
-                return wine;
+                return await wine.populate("variety region producer locationStorage.location");
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
@@ -211,7 +211,7 @@ const resolvers = {
 
         allWinesInLocation: async (parent, { locationId }, context) => {
             if (context.user) {
-                return Wine.findById(id);
+                throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
@@ -255,6 +255,10 @@ const resolvers = {
         },
 
         login: async (parent, { email, password }) => {
+            if(!email || !password){
+                throw new GraphQLError("Please enter both an email and password", {extensions: {code: "BAD_REQUEST"}});
+            }
+            
             const user = await User.findOne({ email });
             if (!user) {
                 throw new GraphQLError("Incorrect Credentials", { extensions: { code: "UNAUTHORISED" } });
