@@ -30,7 +30,6 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                 listStyle: "none",
                 justifyContent: "space-evenly",
                 padding: "5px 0",
-                border: "solid"
             }}>
                 {Auth.loggedIn() ? (
                     <>
