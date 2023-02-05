@@ -2,8 +2,6 @@ import React, {useState} from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,16 +9,9 @@ import Fade from "@mui/material/Fade";
 import CssBaseline from "@mui/material/CssBaseline";
 
 import Auth from "../utils/auth";
-import { borderRadius } from "@mui/system";
-
-
-const navButtonClass = {
-
-}
 
 export default function Navigation({ currentPage, setCurrentPage }) {
     const [anchorEl, setAnchorEl] = useState(null);
-    const [viewAnchorEl, setViewAnchorEl] = useState(null)
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
       setAnchorEl(event.currentTarget);
