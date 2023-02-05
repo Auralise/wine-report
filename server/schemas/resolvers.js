@@ -255,6 +255,10 @@ const resolvers = {
         },
 
         login: async (parent, { email, password }) => {
+            if(!email || !password){
+                throw new GraphQLError("Please enter both an email and password", {extensions: {code: "BAD_REQUEST"}});
+            }
+            
             const user = await User.findOne({ email });
             if (!user) {
                 throw new GraphQLError("Incorrect Credentials", { extensions: { code: "UNAUTHORISED" } });
