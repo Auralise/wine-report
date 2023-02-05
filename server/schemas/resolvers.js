@@ -223,10 +223,10 @@ const resolvers = {
     Mutation: {
         //Non authenticated endpoints
         // Further development decision on allowing administrators to add users 
-        addUser: async (parent, { fullName, email, password }) => {
+        addUser: async (parent, { name, email, password }) => {
             try {
-                if (userValidation(fullName, email, password)) {
-                    const user = await User.create({ name: fullName, email, password });
+                if (userValidation(name, email, password)) {
+                    const user = await User.create({ name, email, password });
                     if (!user) {
                         throw new GraphQLError("Failed to create user", { extensions: { code: "SERVER_ERROR" } });
                     }
