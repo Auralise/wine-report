@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Container from "@mui/material/Container";
 
-
 import Auth from "../utils/auth";
 
 // TODO: import other components
 import Header from "../components/header";
-import Navigation from "../components/navigation"
+import Navigation from "../components/navigation";
+import Footer from "../components/footer";
 
 
 //Import pages to render
@@ -81,6 +81,19 @@ export default function PageContainer() {
                                 element={<AddVariety />}
                             />
 
+                            <Route
+                                path="/view-variety"
+                                element={<AddVariety />}
+                            />
+                            <Route
+                                path="/add-variety"
+                                element={<AddVariety />}
+                            />
+                            <Route
+                                path="/add-variety"
+                                element={<AddVariety />}
+                            />
+
 
                         </>
 
@@ -107,9 +120,7 @@ export default function PageContainer() {
                 </Routes>
 
             </Router>
-            <footer>
-
-            </footer>
+            <Footer />
         </>
     )
 }
