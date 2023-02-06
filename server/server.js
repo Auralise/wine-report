@@ -39,9 +39,9 @@ const server = new ApolloServer({
 const startApolloServer = async (typeDefs, resolvers) => {
     
     // Provide file targets for express to serve
-    if (process.env.NODE_ENV === "production") {
-        app.use(express.static(path.join(__dirname, "../client/build")));
-    }
+    
+    app.use(express.static(path.join(__dirname, "../client/build")));
+    
     
     app.get("/", (req, res) => {
         res.sendFile(path.join(__dirname, "../client/build/index.html"));
