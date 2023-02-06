@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
+import Link from "@mui/material/Link";
 import CssBaseline from "@mui/material/CssBaseline";
 
 
@@ -60,11 +61,11 @@ export default function Navigation() {
                                 padding: "0 10px",
                             }}
                         >
-                            <MenuItem href="/add-wine"><strong>Add Wine</strong></MenuItem>
-                            <MenuItem href="/add-producer">Add Producer</MenuItem>
-                            <MenuItem href="/add-region">Add Region</MenuItem>
-                            <MenuItem href="/add-storage">Add Storage</MenuItem>
-                            <MenuItem hrew="/add-variety">Add Variety</MenuItem>
+                            <Link href="/add-wine" underline="none" sx={{color: "black"}}><MenuItem><strong>Add Wine</strong></MenuItem></Link>
+                            <Link href="/add-producer" underline="none" sx={{color: "black"}}><MenuItem>Add Producer</MenuItem></Link>
+                            <Link href="/add-region" underline="none" sx={{color: "black"}}><MenuItem>Add Region</MenuItem></Link>
+                            <Link href="/add-storage" underline="none" sx={{color: "black"}}><MenuItem>Add Storage</MenuItem></Link>
+                            <Link href="/add-variety" underline="none" sx={{color: "black"}}><MenuItem>Add Variety</MenuItem></Link>
                         </Menu>
                         <Button 
                             href="/"
