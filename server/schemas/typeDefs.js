@@ -92,7 +92,7 @@ const typeDefs = `#graphql
         updateWineDetails(wineId: ID!, name: String, vintage: Int, variety: ID, region: ID, category: String, producer: ID): Wine
         
         removeWine(wineId: ID!): Wine
-        updateWineStorage(wineId: ID!, storageId: ID!, quantityChange: Int): Wine
+        updateWineStorage(wineId: ID!, storageId: ID!, quantityChange: Int!): Wine
 
         addProducer(name: String!, email: String, phone: String): Producer
         updateProducer(producerId: ID!, name: String, email: String, phone: String): Producer

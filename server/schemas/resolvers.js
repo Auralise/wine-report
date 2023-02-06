@@ -94,30 +94,30 @@ const resolvers = {
                 let results;
                 let query;
 
-                if(searchTerm && !type || !searchTerm && type){
-                    throw new GraphQLError("Please provide a search term and a type or neither to get all wines", {extensions: {code: "BAD_REQUEST"}});
+                if (searchTerm && !type || !searchTerm && type) {
+                    throw new GraphQLError("Please provide a search term and a type or neither to get all wines", { extensions: { code: "BAD_REQUEST" } });
                 }
 
                 if (searchTerm) {
                     query = new RegExp(searchTerm, "i");
-                } 
+                }
 
-                if(type){
-                    if(
+                if (type) {
+                    if (
                         !type === "Region" &&
                         !type === "Producer" &&
                         !type === "Vintage" &&
                         !type === "Category" &&
                         !type === "Variety" &&
-                        !type === "Location" 
+                        !type === "Location"
                     ) {
-                        throw new GraphQLError("Invalid search type", {extensions: {code: "BAD_REQUEST"}});
+                        throw new GraphQLError("Invalid search type", { extensions: { code: "BAD_REQUEST" } });
                     }
                 }
-                
+
                 switch (type) {
                     case "Region":
-                        const regionIds = getIds(await Region.find({name: query}));
+                        const regionIds = getIds(await Region.find({ name: query }));
 
                         results = await Wine.find({
                             region: { $in: regionIds },
@@ -125,7 +125,7 @@ const resolvers = {
                         break;
 
                     case "Producer":
-                        const producerIds = getIds(await Region.find({name: query}));
+                        const producerIds = getIds(await Region.find({ name: query }));
 
                         results = await Wine.find({
                             producer: { $in: producerIds },
@@ -145,17 +145,17 @@ const resolvers = {
                         break;
 
                     case "Variety":
-                        const varietyIds = getIds(await Variety.find({name: {$regex: query}}));
+                        const varietyIds = getIds(await Variety.find({ name: { $regex: query } }));
                         results = Wine.find({
                             variety: { $in: varietyIds },
                         }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Location":
-                        const location = await Location.find({locationName: {$regex: query}});
+                        const location = await Location.find({ locationName: { $regex: query } });
 
                         results = Wine.find({
-                            locationStorage: {location: location._id},
+                            locationStorage: { location: location._id },
                         }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
@@ -255,10 +255,10 @@ const resolvers = {
         },
 
         login: async (parent, { email, password }) => {
-            if(!email || !password){
-                throw new GraphQLError("Please enter both an email and password", {extensions: {code: "BAD_REQUEST"}});
+            if (!email || !password) {
+                throw new GraphQLError("Please enter both an email and password", { extensions: { code: "BAD_REQUEST" } });
             }
-            
+
             const user = await User.findOne({ email });
             if (!user) {
                 throw new GraphQLError("Incorrect Credentials", { extensions: { code: "UNAUTHORISED" } });
@@ -347,8 +347,46 @@ const resolvers = {
 
         },
 
-        updateWineStorage: async (parent, { wineId, storageId, quantityChange: Int }, context) => {
-            throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
+        updateWineStorage: async (parent, { wineId, storageId, quantityChange }, context) => {
+            if (context.user) {
+                try {
+                    //Find the wine
+                    const wine = await Wine.findById(wineId).populate("variety region producer locationStorage.location comments.author");
+
+                    if (!wine) {
+                        throw new Error("Failed to find wine with that ID");
+                    }
+
+                    //find the location that it is stored
+                    const locationStorage = wine.locationStorage.filter(location => {
+                        return location.location.id === storageId;
+                    })[0];
+
+                    if (!locationStorage) {
+                        throw new Error("Unable to remove wine from a place where there is none");
+                    }
+
+                    if ((locationStorage.quantity + quantityChange) < 0) {
+                        throw new Error("You can't remove any more");
+                    }
+
+                    locationStorage.quantity += quantityChange;
+
+                    wine.save();
+
+                    return wine;
+
+                } catch (e) {
+                    throw new GraphQLError(e.message, { extensions: { code: e.name } });
+
+                }
+
+
+            }
+
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+
         },
 
         // Producer
@@ -457,8 +495,8 @@ const resolvers = {
                         content: contents,
                         author: context.user._id
                     }
-                    const newWine = await Wine.findByIdAndUpdate(wineId, { $push: {comments: comment}}, {new: true}).populate("variety region producer locationStorage.location comments.author");
-                    
+                    const newWine = await Wine.findByIdAndUpdate(wineId, { $push: { comments: comment } }, { new: true }).populate("variety region producer locationStorage.location comments.author");
+
                     return newWine;
 
                 } else {
