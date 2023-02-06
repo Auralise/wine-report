@@ -98,6 +98,7 @@ export default function Navigation() {
                             sx={{
                                 flex: "1 1",
                             }}
+                            variant="contained"
                         >
                             Login
                         </Button>
