@@ -164,51 +164,22 @@ export const REMOVE_WINE = gql`
 `;
 
 export const UPDATE_STORAGE_QUANTITY = gql`
-    mutation UpdateStorageQuantity ($wineId: ID, $storageId: ID, $quantityChange: Int){
+    mutation UpdateStorageQuantity ($wineId: ID!, $storageId: ID!, $quantityChange: Int!){
         updateWineStorage(wineId: $wineId, storageId: $storageId, quantityChange: $quantityChange){
+        _id
+        quantity
+        location {
             _id
-            name
-            vintage
-        variety {
-                _id
-                name
-            }
-        region {
-                _id
-                name
-                country
-            }
-        producer {
-                _id
-                name
-                email
-                phone
-            }
-        comments {
-                _id
-                content
-            author {
-                    _id
-                    name
-                }
-                createdAt
-            }
-            category
-        locationStorage {
-            location {
-                    _id
-                    locationName
-                    locationRoom
-                    description
-                }
-                quantity
-            }
+            locationName
+            locationRoom
+            description
         }
     }
+}
 `;
 
 export const ADD_COMMENT = gql`
-    mutation AddComment ($wineId: ID, $contents: String) {
+    mutation AddComment ($wineId: ID!, $contents: String!) {
         addComment(wineId: $wineId, contents: $contents) {
             _id
             name

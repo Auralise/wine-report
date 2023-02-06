@@ -72,7 +72,9 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                         <Button 
                             href="/search"
                             onClick={setCurrentPage("AdvancedSearch")}
-                        >Advanced Search</Button>
+                        >
+                            Advanced Search
+                        </Button>
 
                         <Button
                             href="/"

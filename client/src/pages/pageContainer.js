@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 import Auth from "../utils/auth";
 
@@ -41,6 +42,8 @@ export default function PageContainer() {
                 <Header />
                 <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
             </Container>
+            {/* Fix for the sticky footer */}
+            <Box mb={10}> 
             <Router>
                 <Routes>
                     {Auth.loggedIn() ? (
@@ -117,6 +120,7 @@ export default function PageContainer() {
                 </Routes>
 
             </Router>
+            </Box>
             <Footer />
         </>
     )
