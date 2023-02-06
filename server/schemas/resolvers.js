@@ -94,28 +94,34 @@ const resolvers = {
                 let results;
                 let query;
 
-                if (searchTerm && !type || !searchTerm && type) {
-                    throw new GraphQLError("Please provide a search term and a type or neither to get all wines", { extensions: { code: "BAD_REQUEST" } });
-                }
+                // if (searchTerm && !type || !searchTerm && type) {
+                //     throw new GraphQLError("Please provide a search term and a type or neither to get all wines", { extensions: { code: "BAD_REQUEST" } });
+                // }
 
                 if (searchTerm) {
-                    query = new RegExp(searchTerm, "i");
+                    query = new RegExp(searchTerm.toLowerCase(), "i");
                 }
-
+                
                 if (type) {
                     if (
-                        !type === "Region" &&
-                        !type === "Producer" &&
-                        !type === "Vintage" &&
-                        !type === "Category" &&
-                        !type === "Variety" &&
-                        !type === "Location"
+                        !type === "name" &&
+                        !type === "region" &&
+                        !type === "producer" &&
+                        !type === "vintage" &&
+                        !type === "category" &&
+                        !type === "variety" &&
+                        !type === "location"
                     ) {
                         throw new GraphQLError("Invalid search type", { extensions: { code: "BAD_REQUEST" } });
                     }
                 }
-
+                // Currently only the name case works. This is here for futhrer development
                 switch (type) {
+                    case "name": 
+                        results = await Wine.find({
+                            name: { $regex: query }
+                        }).populate("variety region producer locationStorage.location comments.author");
+                        break;
                     case "Region":
                         const regionIds = getIds(await Region.find({ name: query }));
 

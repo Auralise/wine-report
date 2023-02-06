@@ -158,47 +158,51 @@ export const GET_ALL_WINE = gql`
 `;
 
 export const SEARCH_WINE = gql`
-    query searchWine($type: String, $searchTerm: String) {
-      wine {
+query Wine($searchTerm: String, $type: String) {
+  wine(searchTerm: $searchTerm, type: $type) {
+    _id
+    name
+    vintage
+    variety {
+      _id
+      name
+    }
+    region {
+      _id
+      name
+      country
+    }
+    producer {
+      _id
+      name
+      email
+      phone
+    }
+    comments {
+      _id
+      content
+      author {
         _id
         name
-        vintage
-        variety {
-          _id
-          name
-        }
-        region {
-          _id
-          name
-          country
-        }
-        producer {
-          _id
-          name
-          email
-          phone
-        }
-        comments {
-          _id
-          content
-          author {
-            _id
-            name
-          }
-          createdAt
-        }
-        locationStorage {
-          location {
-            _id
-            locationName
-            locationRoom
-            description
-          }
-          quantity
-        }
-        category
+        email
+        role
+        approved
       }
+      createdAt
     }
+    locationStorage {
+      _id
+      location {
+        _id
+        locationName
+        locationRoom
+        description
+      }
+      quantity
+    }
+    category
+  }
+}
 `;
   
   

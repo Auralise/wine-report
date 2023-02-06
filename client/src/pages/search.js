@@ -5,16 +5,25 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+// Imports are here for when search is expanded to allow the user to target other attributes with search terms. 
+// import FormControl from "@mui/material/FormControl";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import Radio from "@mui/material/Radio";
+// import RadioGroup from "@mui/material/RadioGroup";
+// import FormLabel from "@mui/material/FormLabel"
+
 export default function Search() {
-  const [searchState, setSearchState] = useState("");
+  const [searchState, setSearchState] = useState({
+    term: "",
+  });
 
   const handleSearchChange = (event) => {
-    setSearchState(event.target.value);
+    setSearchState({term: event.target.value});
   }
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    const queryString = new URLSearchParams({term: `${searchState}`});
+    const queryString = new URLSearchParams({...searchState});
     console.log(queryString.toString());
     window.location.assign(`/results?${queryString.toString()}`)
   }
@@ -39,7 +48,10 @@ export default function Search() {
           fullWidth
           margin="normal"
           onChange={handleSearchChange}
+          value={searchState.term}
         />
+
+
         <Button
           type="submit"
           fullWidth

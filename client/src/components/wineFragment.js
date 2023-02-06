@@ -15,12 +15,16 @@ const Wine = styled(Paper)(() => ({
     display: "flex",
 }));
 
+const imgStyle = {
+    width: "auto",
+    height: "height"
+}
 
 export default function WineFragment({ wine }) {
     return (
         <Link id={wine._id} href={`/wine/${wine._id}`} underline="none">
             <Wine>
-                <img src="https://via.placeholder.com/150" alt="Placeholder for wine" />
+                <img src="https://via.placeholder.com/150" alt="Placeholder for wine" style={imgStyle} />
                 <Box ml={5} sx={{
                     display: "flex",
                     flexDirection: "column"
