@@ -374,7 +374,7 @@ const resolvers = {
 
                     wine.save();
 
-                    return wine;
+                    return locationStorage;
 
                 } catch (e) {
                     throw new GraphQLError(e.message, { extensions: { code: e.name } });

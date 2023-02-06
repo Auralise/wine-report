@@ -48,9 +48,8 @@ const typeDefs = `#graphql
         createdAt: String!
     }
 
-    # Structure for quantity in storage - If quantity > 0 then location can not be null - To be handled in the resolver
-    # Noteably, this may require some re-work to appropriately locate wines in the storage tree
     type StorageQuantity {
+        _id: ID!
         location: Storage!
         quantity: Int!
     }
@@ -92,7 +91,7 @@ const typeDefs = `#graphql
         updateWineDetails(wineId: ID!, name: String, vintage: Int, variety: ID, region: ID, category: String, producer: ID): Wine
         
         removeWine(wineId: ID!): Wine
-        updateWineStorage(wineId: ID!, storageId: ID!, quantityChange: Int!): Wine
+        updateWineStorage(wineId: ID!, storageId: ID!, quantityChange: Int!): StorageQuantity!
 
         addProducer(name: String!, email: String, phone: String): Producer
         updateProducer(producerId: ID!, name: String, email: String, phone: String): Producer
