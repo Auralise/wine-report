@@ -32,8 +32,8 @@ export const LOGIN = gql`
 `;
 
 export const ADD_STORAGE = gql`
-    mutation AddStorage($locationName: String!, $locationRoom: String!) {
-        addStorage(locationName: $locationName, locationRoom: $locationRoom) {
+    mutation AddStorage($locationName: String!, $locationRoom: String!, $description: String) {
+        addStorage(locationName: $locationName, locationRoom: $locationRoom, description: $description) {
             _id
             locationName
             locationRoom
@@ -55,8 +55,8 @@ export const ADD_REGION = gql`
 `;  
   
 export const ADD_VARIETY = gql`
-    mutation AddVariety($addVarietyName2: String!) {
-        addVariety(name: $addVarietyName2) {
+    mutation AddVariety($name: String!) {
+        addVariety(name: $name) {
             _id
             name
         }
@@ -64,8 +64,8 @@ export const ADD_VARIETY = gql`
 `;
   
 export const ADD_PRODUCER = gql`
-    mutation AddProducer($addProducerName2: String!, $addProducerEmail2: String, $phone: String) {
-        addProducer(name: $addProducerName2, email: $addProducerEmail2, phone: $phone) {
+    mutation AddProducer($name: String!, $email: String, $phone: String) {
+        addProducer(name: $name, email: $email, phone: $phone) {
             _id
             name
             email
@@ -76,8 +76,8 @@ export const ADD_PRODUCER = gql`
   
   
 export const ADD_WINE= gql`
-    mutation AddWine($addWineName2: String!, $region: ID!, $category: String!, $producer: ID!, $location: ID!, $quantity: Int!, $vintage: Int, $variety: ID) {
-        addWine(name: $addWineName2, region: $region, category: $category, producer: $producer, location: $location, quantity: $quantity, vintage: $vintage, variety: $variety) {
+    mutation AddWine($name: String!, $region: ID!, $category: String!, $producer: ID!, $location: ID!, $quantity: Int!, $vintage: Int, $variety: ID) {
+        addWine(name: $name, region: $region, category: $category, producer: $producer, location: $location, quantity: $quantity, vintage: $vintage, variety: $variety) {
             _id
             name
             vintage

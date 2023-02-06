@@ -22,15 +22,12 @@ export default function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const searchTerm = searchParams.get("term") || "";
-    const type = "name";
-
-    console.log("term: ", searchTerm, " type: ", type);
+    
 
     // eslint-disable-next-line no-unused-vars
     const { loading, data, error } = useQuery(SEARCH_WINE, {
         variables: {
             searchTerm,
-            type
         }
     });
 

@@ -97,26 +97,30 @@ const resolvers = {
                 // if (searchTerm && !type || !searchTerm && type) {
                 //     throw new GraphQLError("Please provide a search term and a type or neither to get all wines", { extensions: { code: "BAD_REQUEST" } });
                 // }
+                
+                //Type has been hard coded for the time being but the structure is defined for 
+                let tempType
 
                 if (searchTerm) {
                     query = new RegExp(searchTerm.toLowerCase(), "i");
+                    tempType = "name";
                 }
                 
-                if (type) {
+                if (tempType) {
                     if (
-                        !type === "name" &&
-                        !type === "region" &&
-                        !type === "producer" &&
-                        !type === "vintage" &&
-                        !type === "category" &&
-                        !type === "variety" &&
-                        !type === "location"
+                        !tempType === "name" &&
+                        !tempType === "region" &&
+                        !tempType === "producer" &&
+                        !tempType === "vintage" &&
+                        !tempType === "category" &&
+                        !tempType === "variety" &&
+                        !tempType === "location"
                     ) {
                         throw new GraphQLError("Invalid search type", { extensions: { code: "BAD_REQUEST" } });
                     }
                 }
                 // Currently only the name case works. This is here for futhrer development
-                switch (type) {
+                switch (tempType) {
                     case "name": 
                         results = await Wine.find({
                             name: { $regex: query }
@@ -403,11 +407,11 @@ const resolvers = {
                         throw new Error("Please provide a name for the producer between 3 and 50 characters in length");
                     }
 
-                    if (!isValidEmail(email)) {
+                    if (email && !isValidEmail(email)) {
                         throw new Error("Please provide a valid email");
                     }
 
-                    if (!phone.match(/^\+?[0-9]{6,12}/)) {
+                    if (phone && !phone.match(/^\+?[0-9]{6,12}/)) {
                         throw new Error("Please provide a valid phone number");
                     }
 
