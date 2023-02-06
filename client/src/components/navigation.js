@@ -67,13 +67,13 @@ export default function Navigation() {
                             <MenuItem hrew="/add-variety">Add Variety</MenuItem>
                         </Menu>
                         <Button 
-                            href="/search"
+                            href="/"
                             sx={{
                                 flex: "1 1"
                             }}
                             variant="contained"
                         >
-                            Advanced Search
+                            Search
                         </Button>
 
                         <Button
