@@ -38,7 +38,7 @@ export default function AddWine() {
     const { loading: storageLoading, data: storageData, error: storageError } = useQuery(GET_ALL_STORAGE_LOCATIONS);
     const { loading: regionLoading, data: regionData, error: regionError } = useQuery(GET_ALL_REGIONS);
 
-    console.log(storageData);
+    // console.log(storageData);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -57,7 +57,7 @@ export default function AddWine() {
             const quantity = parseInt(formContents.quantity);
             if(isNaN(quantity)) throw new Error("Quantity must be an integer");
 
-            console.log(vintage);
+            // console.log(vintage);
             addWine({
                 variables: { 
                     ...formContents,
@@ -68,7 +68,7 @@ export default function AddWine() {
 
             window.location.assign(`/wine/${wineData.addWine._id}`);
         } catch (e) {
-            console.log(JSON.stringify(e, null, 2))
+            // console.log(JSON.stringify(e, null, 2))
             setErrorMessage(e.message);
         }
     }
