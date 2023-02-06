@@ -14,7 +14,7 @@ import Footer from "../components/footer";
 
 
 //Import pages to render
-import Dashboard from "./dashboard";
+import Search from "./dashboard";
 import AddStorage from "./addStorage";
 import SearchResults from "./results";
 import SingleWine from "./singleWine"
@@ -28,7 +28,6 @@ import LoginPage from "./login";
 import Register from "./register";
 
 export default function PageContainer() {
-    const [currentPage, setCurrentPage] = useState("Home");
 
     const [searchTerms, setSearchTerms] = useState("");
 
@@ -40,7 +39,7 @@ export default function PageContainer() {
                 width: "100%",
             }}>
                 <Header />
-                <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                <Navigation />
             </Container>
             {/* Fix for the sticky footer */}
             <Box mb={10}> 
@@ -50,7 +49,7 @@ export default function PageContainer() {
                         <>
                             <Route
                                 path="/"
-                                element={<Dashboard />}
+                                element={<Search />}
                             />
                             <Route
                                 path="/results"

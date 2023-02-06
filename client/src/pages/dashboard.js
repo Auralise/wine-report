@@ -1,47 +1,100 @@
-import React from "react";
+import React, { useState } from "react";
 import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import RadioGroup from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
+import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import WineFragment from "../components/wineFragment";
+export default function Search() {
+  const [searchState, setSearchState] = useState("");
 
-const sampleWine = {   
-          "_id": "63dc6cc0ecc96ad4a2a91512",
-          "name": "Tussy Mussy",
-          "vintage": 2019,
-          "variety": {
-            "_id": "63dc5a338f74cb614035193f",
-            "name": "Pinot Noir"
-          },
-          "region": {
-            "_id": "63dc59cf5eaaf17855090cb8",
-            "name": "Mornington Peninsula",
-            "country": "Australia"
-          },
-          "producer": {
-            "_id": "63dc5c1b50e8d7cd0c6755db",
-            "name": "Queely",
-            "email": "Kathleen@queely.com.au",
-            "phone": "12345678"
-          },
-          "comments": [],
-          "locationStorage": [
-            {
-              "location": {
-                "_id": "63dc58559d5b1a47097e328a",
-                "locationName": "K-2",
-                "locationRoom": "Kitchen",
-                "description": null
-              },
-              "quantity": 10
-            }
-          ],
-          "category": "Red"
-}
+  const handleSearchChange = (event) => {
+    setSearchState(event.target.value);
+  }
 
-export default function Dasboard () {
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    const queryString = new URLSearchParams({term: `${searchState}`});
+    console.log(queryString.toString());
+    window.location.assign(`/results?${queryString.toString()}`)
+  }
 
-    return (
-        <Container>
-            <WineFragment wine={sampleWine} />
-        </Container>
-    )
+
+  return (
+    <Container maxWidth="lg">
+      <Box component="form"
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "2em",
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: "1em"
+
+        }}
+        onSubmit={handleSearchSubmit}
+      >
+        <Typography component="h2" variant="h2">Search wines in your cellar</Typography>
+        <TextField
+          fullWidth
+          margin="normal"
+          onChange={handleSearchChange}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+        >
+          Search
+        </Button>
+      </Box>
+      <Typography component="h2" variant="h3" mt={5} mb={3} textAlign="center">
+        Other actions
+      </Typography>
+      <Box
+        component="div"
+        sx={{ 
+          display: "flex",
+          justifyContent: "center",
+          gap: "1em"
+         }}
+      >
+        <Button
+          variant="contained"
+          href="/add-wine"
+        >
+          Add Wine
+        </Button>
+        <Button
+          variant="contained"
+          href="/add-producer"
+        >
+          Add Producer
+        </Button>
+        <Button
+          variant="contained"
+          href="/add-region"
+        >
+          Add Region</Button>
+        <Button
+          variant="contained"
+          href="/add-variety"
+        >
+          Add Variety
+        </Button>
+        <Button
+          variant="contained"
+          href="/add-storage"
+        >
+          Add Storage Location
+        </Button>
+
+      </Box>
+
+    </Container>
+  )
 }
