@@ -1,5 +1,5 @@
 //Environment config
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 dotenv.config()
 
 //Server package imports
