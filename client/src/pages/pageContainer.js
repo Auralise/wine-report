@@ -14,7 +14,7 @@ import Footer from "../components/footer";
 
 
 //Import pages to render
-import Search from "./dashboard";
+import Search from "./search";
 import AddStorage from "./addStorage";
 import SearchResults from "./results";
 import SingleWine from "./singleWine"
