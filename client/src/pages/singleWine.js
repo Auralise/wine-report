@@ -169,6 +169,7 @@ export default function SingleWine() {
                                         </Typography>
                                         <Box sx={{
                                             display: "flex",
+                                            gap: "2em"
 
                                         }}>
                                             <Button onClick={handleDecreaseQuantity} data-locationid={`${loc.location._id}`} variant="contained">
