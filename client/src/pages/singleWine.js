@@ -171,10 +171,10 @@ export default function SingleWine() {
                                             display: "flex",
 
                                         }}>
-                                            <Button onClick={handleDecreaseQuantity} data-locationid={`${loc.location._id}`}>
+                                            <Button onClick={handleDecreaseQuantity} data-locationid={`${loc.location._id}`} variant="contained">
                                                 -
                                             </Button>
-                                            <Button onClick={handleIncreaseQuantity} data-locationid={`${loc.location._id}`}>
+                                            <Button onClick={handleIncreaseQuantity} data-locationid={`${loc.location._id}`} variant="contained">
                                                 +
                                             </Button>
 
