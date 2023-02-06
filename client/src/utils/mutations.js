@@ -267,6 +267,7 @@ export const DELETE_COMMENT = gql`
 `;
 
 // not exported as this is not yet implemented on the server side.
+// eslint-disable-next-line no-unused-vars
 const UPDATE_WINE = gql`
     mutation UpdateWine ($wineId: ID!, $name: String, $vintage: Int, $variety: ID, $region: ID, $category: String, $producer: ID){
         updateWineDetails (wineId: $wineId, name: $name, vintage: $vintage, variety: $variety, region: $region, category: $category, producer: $producer) {

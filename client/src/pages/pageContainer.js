@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -28,8 +28,6 @@ import LoginPage from "./login";
 import Register from "./register";
 
 export default function PageContainer() {
-
-    const [searchTerms, setSearchTerms] = useState("");
 
     return (
         // currently using fragments, this can be made into a DOM element if needed for an overall wrapper
@@ -79,20 +77,6 @@ export default function PageContainer() {
                                 path="/add-variety"
                                 element={<AddVariety />}
                             />
-
-                            <Route
-                                path="/view-variety"
-                                element={<AddVariety />}
-                            />
-                            <Route
-                                path="/add-variety"
-                                element={<AddVariety />}
-                            />
-                            <Route
-                                path="/add-variety"
-                                element={<AddVariety />}
-                            />
-
 
                         </>
 
