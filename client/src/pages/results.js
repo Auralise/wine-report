@@ -31,14 +31,14 @@ export default function SearchResults() {
         }
     });
 
-    console.log(data);
+    // console.log(data);
 
     if (error) console.log(JSON.stringify(error, null, 2));
     
     let wines;
     data ? wines = data.wine : wines = [] ;
     
-    console.log(wines);
+    // console.log(wines);
 
     if (loading) {
         return (

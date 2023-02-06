@@ -54,15 +54,15 @@ export default function SingleWine() {
     });
     
     //Print error
-    if (storageItemMutiationObj.error) {
-        console.log(JSON.stringify(storageItemMutiationObj.error, null, 2));
+    // if (storageItemMutiationObj.error) {
+    //     console.log(JSON.stringify(storageItemMutiationObj.error, null, 2));
         
-    }
+    // }
     
-    if (addCommentMutationObj.error){
-        console.log(JSON.stringify(addCommentMutationObj.error, null, 2));
+    // if (addCommentMutationObj.error){
+    //     console.log(JSON.stringify(addCommentMutationObj.error, null, 2));
 
-    }
+    // }
 
     const { wineId } = useParams();
     
@@ -72,7 +72,7 @@ export default function SingleWine() {
     });
     const wine = data?.specificWine || {};
 
-    console.log(wine);
+    // console.log(wine);
     
     const handleCommentChange = (event) => {
         const {value} = event.target;
@@ -116,7 +116,7 @@ export default function SingleWine() {
                 storageId: locationId,
                 quantityChange: quantity
             }});
-            console.log(storageItemMutiationObj.error);
+            // console.log(storageItemMutiationObj.error);
         } catch (e) {
             console.error(e);
         }
