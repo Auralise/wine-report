@@ -25,9 +25,9 @@ export const GET_SPECIFIC_USER = gql`
     }
 `;
 
-export const GET_CURRENT_USER = gql`
-    query get
-`;
+// export const GET_CURRENT_USER = gql`
+//     query get
+// `;
 
 export const GET_ALL_PRODUCERS = gql`
     query getAllProducers {
@@ -158,53 +158,57 @@ export const GET_ALL_WINE = gql`
 `;
 
 export const SEARCH_WINE = gql`
-    query searchWine($type: String, $searchTerm: String) {
-      wine {
+query Wine($searchTerm: String, $type: String) {
+  wine(searchTerm: $searchTerm, type: $type) {
+    _id
+    name
+    vintage
+    variety {
+      _id
+      name
+    }
+    region {
+      _id
+      name
+      country
+    }
+    producer {
+      _id
+      name
+      email
+      phone
+    }
+    comments {
+      _id
+      content
+      author {
         _id
         name
-        vintage
-        variety {
-          _id
-          name
-        }
-        region {
-          _id
-          name
-          country
-        }
-        producer {
-          _id
-          name
-          email
-          phone
-        }
-        comments {
-          _id
-          content
-          author {
-            _id
-            name
-          }
-          createdAt
-        }
-        locationStorage {
-          location {
-            _id
-            locationName
-            locationRoom
-            description
-          }
-          quantity
-        }
-        category
+        email
+        role
+        approved
       }
+      createdAt
     }
+    locationStorage {
+      _id
+      location {
+        _id
+        locationName
+        locationRoom
+        description
+      }
+      quantity
+    }
+    category
+  }
+}
 `;
   
   
 export const GET_SINGLE_WINE = gql`
-    query getSingleWine($id: ID){
-      wine {
+    query getSingleWine($id: ID!){
+      specificWine(id: $id) {
         _id
         name
         vintage
@@ -229,6 +233,9 @@ export const GET_SINGLE_WINE = gql`
           author {
             _id
             name
+            email
+            role
+            approved
           }
           createdAt
         }
@@ -243,6 +250,5 @@ export const GET_SINGLE_WINE = gql`
         }
         category
       }
-    }
     }
 `;

@@ -43,19 +43,19 @@ export const getDateObject = (timestamp, { twelveHourFormat = false, shortMonthN
     dateContainer.minute = (dateObj.getMinutes() < 10 ? "0" : "") + dateObj.getMinutes();
 
     // Add formatted versions of the time
-    if (twelveHourFormat) {
-        dateContainer.formatted = {
-            words: `${date.day}/${date.month}/${date.year}  ${date.hour}:${date.minute}${date.period}`,
-            text: `${date.day} ${date.monthName} ${date.year}  ${date.hour}:${date.minute}${date.period}`,
-        }
-    } else {
-        dateContainer.formatted = {
-            words: `${date.day}/${date.month}/${date.year}  ${date.hour}:${date.minute}`,
-            text: `${date.day}/${date.month}/${date.year}  ${date.hour}:${date.minute}`,
-        }
-    }
+    // if (twelveHourFormat) {
+    //     dateContainer.formatted = {
+    //         words: `${dateContainer.day}/${dateContainer.month}/${dateContainer.year}  ${dateContainer.hour}:${dateContainer.minute}${dateContainer.period}`,
+    //         text: `${date.day} ${date.monthName} ${date.year}  ${date.hour}:${date.minute}${date.period}`,
+    //     }
+    // } else {
+    //     dateContainer.formatted = {
+    //         words: `${date.day}/${date.month}/${date.year}  ${date.hour}:${date.minute}`,
+    //         text: `${date.day}/${date.month}/${date.year}  ${date.hour}:${date.minute}`,
+    //     }
+    // }
 
-    return dateContainer;
+    return `${dateContainer.day}/${dateContainer.month}/${dateContainer.year}  ${dateContainer.hours}:${dateContainer.minute}${dateContainer.period}`;
 
 }
 

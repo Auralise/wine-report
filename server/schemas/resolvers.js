@@ -94,74 +94,84 @@ const resolvers = {
                 let results;
                 let query;
 
-                if(searchTerm && !type || !searchTerm && type){
-                    throw new GraphQLError("Please provide a search term and a type or neither to get all wines", {extensions: {code: "BAD_REQUEST"}});
-                }
+                // if (searchTerm && !type || !searchTerm && type) {
+                //     throw new GraphQLError("Please provide a search term and a type or neither to get all wines", { extensions: { code: "BAD_REQUEST" } });
+                // }
+                
+                //Type has been hard coded for the time being but the structure is defined for 
+                let tempType
 
                 if (searchTerm) {
-                    query = new RegExp(searchTerm, "i");
-                } 
-
-                if(type){
-                    if(
-                        !type === "Region" &&
-                        !type === "Producer" &&
-                        !type === "Vintage" &&
-                        !type === "Category" &&
-                        !type === "Variety" &&
-                        !type === "Location" 
-                    ) {
-                        throw new GraphQLError("Invalid search type", {extensions: {code: "BAD_REQUEST"}});
-                    }
+                    query = new RegExp(searchTerm.toLowerCase(), "i");
+                    tempType = "name";
                 }
                 
-                switch (type) {
+                if (tempType) {
+                    if (
+                        !tempType === "name" &&
+                        !tempType === "region" &&
+                        !tempType === "producer" &&
+                        !tempType === "vintage" &&
+                        !tempType === "category" &&
+                        !tempType === "variety" &&
+                        !tempType === "location"
+                    ) {
+                        throw new GraphQLError("Invalid search type", { extensions: { code: "BAD_REQUEST" } });
+                    }
+                }
+                // Currently only the name case works. This is here for futhrer development
+                switch (tempType) {
+                    case "name": 
+                        results = await Wine.find({
+                            name: { $regex: query }
+                        }).populate("variety region producer locationStorage.location comments.author");
+                        break;
                     case "Region":
-                        const regionIds = getIds(await Region.find({name: query}));
+                        const regionIds = getIds(await Region.find({ name: query }));
 
                         results = await Wine.find({
                             region: { $in: regionIds },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Producer":
-                        const producerIds = getIds(await Region.find({name: query}));
+                        const producerIds = getIds(await Region.find({ name: query }));
 
                         results = await Wine.find({
                             producer: { $in: producerIds },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Vintage":
                         results = await Wine.find({
                             vintage: { $regex: query },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Category":
                         results = Wine.find({
                             category: { $regex: query },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Variety":
-                        const varietyIds = getIds(await Variety.find({name: {$regex: query}}));
+                        const varietyIds = getIds(await Variety.find({ name: { $regex: query } }));
                         results = Wine.find({
                             variety: { $in: varietyIds },
-                        }).populate("variety region producer locationStorage.location");
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     case "Location":
-                        const location = await Location.find({locationName: {$regex: query}});
+                        const location = await Location.find({ locationName: { $regex: query } });
 
                         results = Wine.find({
-                            locationStorage: {location: location._id},
-                        }).populate("variety region producer locationStorage.location");
+                            locationStorage: { location: location._id },
+                        }).populate("variety region producer locationStorage.location comments.author");
                         break;
 
                     default:
                         //Find all wine
-                        results = Wine.find({}).populate("variety region producer locationStorage.location");
+                        results = Wine.find({}).populate("variety region producer locationStorage.location comments.author");
                 }
 
                 return results;
@@ -174,12 +184,12 @@ const resolvers = {
         specificWine: async (parent, { id }, context) => {
             if (context.user) {
                 const wine = Wine.findById(id);
-
+                console.log(context.user);
                 if (!wine) {
                     throw new GraphQLError("No wine found by this ID", { extensions: { code: "NOT_FOUND" } });
                 }
 
-                return await wine.populate("variety region producer locationStorage.location");
+                return await wine.populate("variety region producer locationStorage.location comments.author");
             }
 
             throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
@@ -223,10 +233,10 @@ const resolvers = {
     Mutation: {
         //Non authenticated endpoints
         // Further development decision on allowing administrators to add users 
-        addUser: async (parent, { fullName, email, password }) => {
+        addUser: async (parent, { name, email, password }) => {
             try {
-                if (userValidation(fullName, email, password)) {
-                    const user = await User.create({ name: fullName, email, password });
+                if (userValidation(name, email, password)) {
+                    const user = await User.create({ name, email, password });
                     if (!user) {
                         throw new GraphQLError("Failed to create user", { extensions: { code: "SERVER_ERROR" } });
                     }
@@ -255,10 +265,10 @@ const resolvers = {
         },
 
         login: async (parent, { email, password }) => {
-            if(!email || !password){
-                throw new GraphQLError("Please enter both an email and password", {extensions: {code: "BAD_REQUEST"}});
+            if (!email || !password) {
+                throw new GraphQLError("Please enter both an email and password", { extensions: { code: "BAD_REQUEST" } });
             }
-            
+
             const user = await User.findOne({ email });
             if (!user) {
                 throw new GraphQLError("Incorrect Credentials", { extensions: { code: "UNAUTHORISED" } });
@@ -307,7 +317,7 @@ const resolvers = {
                             comments: []
                         });
 
-                        return await wine.populate("variety region producer locationStorage.location");
+                        return await wine.populate("variety region producer locationStorage.location comments.author");
                     }
 
                 } catch (e) {
@@ -347,8 +357,46 @@ const resolvers = {
 
         },
 
-        updateWineStorage: async (parent, { wineId, storageId, quantityChange: Int }, context) => {
-            throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });
+        updateWineStorage: async (parent, { wineId, storageId, quantityChange }, context) => {
+            if (context.user) {
+                try {
+                    //Find the wine
+                    const wine = await Wine.findById(wineId).populate("variety region producer locationStorage.location comments.author");
+
+                    if (!wine) {
+                        throw new Error("Failed to find wine with that ID");
+                    }
+
+                    //find the location that it is stored
+                    const locationStorage = wine.locationStorage.filter(location => {
+                        return location.location.id === storageId;
+                    })[0];
+
+                    if (!locationStorage) {
+                        throw new Error("Unable to remove wine from a place where there is none");
+                    }
+
+                    if ((locationStorage.quantity + quantityChange) < 0) {
+                        throw new Error("You can't remove any more");
+                    }
+
+                    locationStorage.quantity += quantityChange;
+
+                    wine.save();
+
+                    return locationStorage;
+
+                } catch (e) {
+                    throw new GraphQLError(e.message, { extensions: { code: e.name } });
+
+                }
+
+
+            }
+
+
+            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
+
         },
 
         // Producer
@@ -359,11 +407,11 @@ const resolvers = {
                         throw new Error("Please provide a name for the producer between 3 and 50 characters in length");
                     }
 
-                    if (!isValidEmail(email)) {
+                    if (email && !isValidEmail(email)) {
                         throw new Error("Please provide a valid email");
                     }
 
-                    if (!phone.match(/^\+?[0-9]{6,12}/)) {
+                    if (phone && !phone.match(/^\+?[0-9]{6,12}/)) {
                         throw new Error("Please provide a valid phone number");
                     }
 
@@ -400,8 +448,8 @@ const resolvers = {
                     }
 
                     const region = await Region.create({
-                        name,
-                        country,
+                        name: name,
+                        country: country,
                     });
 
                     return region;
@@ -455,11 +503,11 @@ const resolvers = {
                     }
                     const comment = {
                         content: contents,
-                        author: context.user.name
+                        author: context.user._id
                     }
-                    wine.comment.push(comment);
-                    await wine.save();
-                    return wine;
+                    const newWine = await Wine.findByIdAndUpdate(wineId, { $push: { comments: comment } }, { new: true }).populate("variety region producer locationStorage.location comments.author");
+
+                    return newWine;
 
                 } else {
                     throw new GraphQLError("No Wine by this ID found", { extensions: { code: "" } })

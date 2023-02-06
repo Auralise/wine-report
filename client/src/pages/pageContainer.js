@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Container from "@mui/material/Container";
+import Box from "@mui/material/Box";
 
 import Auth from "../utils/auth";
 
@@ -13,7 +14,7 @@ import Footer from "../components/footer";
 
 
 //Import pages to render
-import Dashboard from "./dashboard";
+import Search from "./search";
 import AddStorage from "./addStorage";
 import SearchResults from "./results";
 import SingleWine from "./singleWine"
@@ -27,12 +28,6 @@ import LoginPage from "./login";
 import Register from "./register";
 
 export default function PageContainer() {
-    const [currentPage, setCurrentPage] = useState("Home");
-
-    const [searchTerms, setSearchTerms] = useState("");
-
-
-
 
     return (
         // currently using fragments, this can be made into a DOM element if needed for an overall wrapper
@@ -42,15 +37,17 @@ export default function PageContainer() {
                 width: "100%",
             }}>
                 <Header />
-                <Navigation currentPage={currentPage} setCurrentPage={setCurrentPage} />
+                <Navigation />
             </Container>
+            {/* Fix for the sticky footer */}
+            <Box mb={10}> 
             <Router>
                 <Routes>
                     {Auth.loggedIn() ? (
                         <>
                             <Route
                                 path="/"
-                                element={<Dashboard />}
+                                element={<Search />}
                             />
                             <Route
                                 path="/results"
@@ -81,20 +78,6 @@ export default function PageContainer() {
                                 element={<AddVariety />}
                             />
 
-                            <Route
-                                path="/view-variety"
-                                element={<AddVariety />}
-                            />
-                            <Route
-                                path="/add-variety"
-                                element={<AddVariety />}
-                            />
-                            <Route
-                                path="/add-variety"
-                                element={<AddVariety />}
-                            />
-
-
                         </>
 
                     ) : (
@@ -120,6 +103,7 @@ export default function PageContainer() {
                 </Routes>
 
             </Router>
+            </Box>
             <Footer />
         </>
     )

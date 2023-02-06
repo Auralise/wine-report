@@ -35,12 +35,13 @@ export default function Register() {
             const { data } = await register({
                 variables: { ...registerFormState }
             });
-
+            
             //Reload page after saving token
-            Auth.login(data.login.token);
+            Auth.login(data.addUser.token);
         } catch (e) {
-            console.error(e);
-            //todo: write error to 
+            //Debug Message
+            //console.log(JSON.stringify(e, null, 2))
+            setErrorMessage(e.message);
         }
 
         setRegisterFormState({
@@ -70,11 +71,11 @@ export default function Register() {
                 <TextField
                     margin="normal"
                     onChange={handleChange}
-                    value={registerFormState.email}
+                    value={registerFormState.name}
                     required
                     fullWidth
                     id="name"
-                    label="Name"
+                    label="Full Name"
                     name="name"
                     autoFocus
                 />
@@ -110,7 +111,7 @@ export default function Register() {
                     variant="contained"
                     sx={{mt:2, mb: 2}}
                 >
-                    Sign In
+                    Register
                 </Button>
                 <Typography component="div" sx={{
                         color: "red",

@@ -78,7 +78,7 @@ const startApolloServer = async (typeDefs, resolvers) => {
         
         await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
         console.log(`Server ready and listening at http://localhost:${PORT}`);
-        console.log(`GraphQL accessible at http://localhost:${PORT}/gql`);
+        console.log(`GraphQL accessible at http://localhost:${PORT}/graphql`);
 
         // app.listen(PORT, () => {
         //     console.log(`API server running on port ${PORT}`);

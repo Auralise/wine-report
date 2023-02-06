@@ -1,16 +1,17 @@
 import React, {useState} from "react";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
+import Link from "@mui/material/Link";
 import CssBaseline from "@mui/material/CssBaseline";
+
 
 import Auth from "../utils/auth";
 
-export default function Navigation({ currentPage, setCurrentPage }) {
+export default function Navigation() {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -30,7 +31,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                 listStyle: "none",
                 justifyContent: "space-evenly",
                 padding: "5px 0",
-                border: "solid"
+                gap: "1.5em"
             }}>
                 {Auth.loggedIn() ? (
                     <>
@@ -43,6 +44,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                             sx={{
                                 flex: "1 1",
                             }}
+                            variant="contained"
                         >
                             My Cellar
                         </Button>
@@ -59,32 +61,32 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                                 padding: "0 10px",
                             }}
                         >
-                            <MenuItem href="/view-producer" onClick={setCurrentPage("ViewProducer")}>View Producer</MenuItem>
-                            <MenuItem href="/view-region" onClick={setCurrentPage("ViewRegion")}>View Region</MenuItem>
-                            <MenuItem href="/view-storage" onClick={setCurrentPage("ViewStorage")}>View Storage</MenuItem>
-                            <MenuItem href="/view-variety" onClick={setCurrentPage("ViewVariety")}>View Variety</MenuItem>
-                            <Divider />
-                            <MenuItem href="/add-wine" onClick={setCurrentPage("AddWine")}><strong>Add Wine</strong></MenuItem>
-                            <MenuItem href="/add-producer" onClick={setCurrentPage("AddProducer")}>Add Producer</MenuItem>
-                            <MenuItem href="/add-region" onClick={setCurrentPage("AddRegion")}>Add Region</MenuItem>
-                            <MenuItem href="/add-storage" onClick={setCurrentPage("AddStorage")}>Add Storage</MenuItem>
-                            <MenuItem hrew="/add-variety" onClick={setCurrentPage("AddVariety")}>Add Variety</MenuItem>
+                            <Link href="/add-wine" underline="none" sx={{color: "black"}}><MenuItem><strong>Add Wine</strong></MenuItem></Link>
+                            <Link href="/add-producer" underline="none" sx={{color: "black"}}><MenuItem>Add Producer</MenuItem></Link>
+                            <Link href="/add-region" underline="none" sx={{color: "black"}}><MenuItem>Add Region</MenuItem></Link>
+                            <Link href="/add-storage" underline="none" sx={{color: "black"}}><MenuItem>Add Storage</MenuItem></Link>
+                            <Link href="/add-variety" underline="none" sx={{color: "black"}}><MenuItem>Add Variety</MenuItem></Link>
                         </Menu>
                         <Button 
-                            href="/search"
-                            onClick={setCurrentPage("AdvancedSearch")}
-                        >Advanced Search</Button>
+                            href="/"
+                            sx={{
+                                flex: "1 1"
+                            }}
+                            variant="contained"
+                        >
+                            Search
+                        </Button>
 
                         <Button
                             href="/"
                             onClick={() => {
                                 //set the page state back to login
-                                setCurrentPage("Login");
                                 Auth.logout();
                             }}
                             sx={{
                                 flex: "1 1",
                             }}
+                            variant="contained"
                         >
                             Logout
                         </Button>
@@ -104,6 +106,7 @@ export default function Navigation({ currentPage, setCurrentPage }) {
                             sx={{
                                 flex: "1 1",
                             }}
+                            variant="contained"
                         >
                             Register
                         </Button>

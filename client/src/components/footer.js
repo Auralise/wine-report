@@ -13,7 +13,6 @@ export default function Footer() {
             position: "fixed",
             bottom: "0",
             padding: "1em 0"
-
         }}>
 
             <Typography component="h4" variant="h5">
