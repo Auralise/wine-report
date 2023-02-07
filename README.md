@@ -32,6 +32,7 @@ An example implementation of this project can be seen here: https://wine-report.
 
 Wine report is a fairly straightforward application to use and the interface is fairly clear as to how it operates: 
 
+![image](https://user-images.githubusercontent.com/9697002/217119858-3578c777-ee94-4c49-b243-0f36330f5492.png)
 
 
 ## Technology
