@@ -4,32 +4,17 @@ import { Wine, Producer, Region, Storage, User, Variety } from "../models/index.
 
 import { userValidation, wineValidation, isValidEmail } from "../utils/validation.js";
 
+import { getAllUsers, getSpecificUser, getMe } from "./queries/user.js";
+
 import { signToken } from "../utils/auth.js";
 
 import { getIds } from "../utils/searchHelpers.js";
 
 const resolvers = {
     Query: {
-        users: async (parent, args, context) => {
-            //Authorised only
-            if (context.user || context.user.role === "Owner" && context.user.role === "Manager") {
-                return User.find();
-            }
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
-        user: async (parent, { email }, context) => {
-            //Authorised only
-            if (context.user) {
-                return User.findOne({ email });
-            }
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
-        me: async (parent, args, context) => {
-            if (context.user) {
-                return await User.findById(context.user._id)
-            }
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
+        users: getAllUsers,
+        user: getSpecificUser,
+        me: getMe,
 
         varieties: async (parent, { id, name }, context) => {
             if (context.user) {

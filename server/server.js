@@ -41,12 +41,6 @@ const startApolloServer = async (typeDefs, resolvers) => {
     // Provide file targets for express to serve
     
     app.use(express.static(path.join(__dirname, "../client/build")));
-    
-    
-    app.get("/*", (req, res) => {
-        res.sendFile(path.join(__dirname, "../client/build/index.html"));
-    });
-
 
     db.on("error", (error) => {
         console.error("db connection error: ", error);
@@ -75,6 +69,10 @@ const startApolloServer = async (typeDefs, resolvers) => {
                 context: authMiddleware,
             })
         );
+
+        app.get("/*", (req, res) => {
+            res.sendFile(path.join(__dirname, "../client/build/index.html"));
+        });
         
         await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
         console.log(`Server ready and listening at http://localhost:${PORT}`);
