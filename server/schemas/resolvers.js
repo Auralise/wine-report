@@ -4,7 +4,8 @@ import { Wine, Producer, Region, Storage, User, Variety } from "../models/index.
 
 import { userValidation, wineValidation, isValidEmail } from "../utils/validation.js";
 
-import { getAllUsers, getSpecificUser, getMe } from "./queries/user.js";
+//imports of query methods
+import { getAllUsers, getSpecificUser, getMe, getVarieties } from "./queries/index.js";
 
 import { signToken } from "../utils/auth.js";
 
@@ -16,25 +17,8 @@ const resolvers = {
         user: getSpecificUser,
         me: getMe,
 
-        varieties: async (parent, { id, name }, context) => {
-            if (context.user) {
-                // if passed an ID, attempt to find by id
-                let varieties = [];
-                if (id && name) {
-                    throw new GraphQLError("Please provide either an ID or a Name when searching varieties", { extensions: { code: "BAD_REQUEST" } });
-                } else if (id) {
-                    varieties.push(await Variety.findById(id));
-                } else if (name) {
-                    varieties.push(await Variety.find({ name }));
-                } else {
-                    varieties = await Variety.find({});
-                }
-
-                return varieties;
-            }
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-
-        },
+        varieties: getVarieties,
+        
         regions: async (parent, { id, name }, context) => {
             if (context.user) {
                 let regions = [];
