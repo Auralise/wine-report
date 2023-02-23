@@ -5,7 +5,13 @@ import { Wine, Producer, Region, Storage, User, Variety } from "../models/index.
 import { userValidation, wineValidation, isValidEmail } from "../utils/validation.js";
 
 //imports of query methods
-import { getAllUsers, getSpecificUser, getMe, getVarieties } from "./queries/index.js";
+import { 
+    getAllUsers,
+    getSpecificUser,
+    getMe,
+    getVarieties, 
+    getRegions 
+} from "./queries/index.js";
 
 import { signToken } from "../utils/auth.js";
 
@@ -18,24 +24,8 @@ const resolvers = {
         me: getMe,
 
         varieties: getVarieties,
-        
-        regions: async (parent, { id, name }, context) => {
-            if (context.user) {
-                let regions = [];
-                if (id && name) {
-                    throw new GraphQLError("Please provide either an ID or a Name when searching regions", { extensions: { code: "BAD_REQUEST" } });
-                } else if (id) {
-                    regions.push(await Region.findById(id));
-                } else if (name) {
-                    regions.push(await Region.find({ name }));
-                } else {
-                    regions = Region.find({});
-                }
 
-                return regions;
-            }
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-        },
+        regions: getRegions,
 
         producers: async (parent, { id, name }, context) => {
             if (context.user) {
