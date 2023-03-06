@@ -14,12 +14,10 @@ import {
     getProducers,
     searchWine,
     getSpecificWine, 
-
+    getStorage,
 } from "./queries/index.js";
 
 import { signToken } from "../utils/auth.js";
-
-import { getIds } from "../utils/searchHelpers.js";
 
 const resolvers = {
     Query: {
@@ -30,35 +28,13 @@ const resolvers = {
         varieties: getVarieties,
         regions: getRegions,
         producers: getProducers,
-        
-        wine: searchWine,
 
+        wine: searchWine,
         specificWine: getSpecificWine,
 
-        storage: async (parent, { id, locationName }, context) => {
-            if (context.user) {
-                let storage;
-                if (id) {
-                    storage = [Storage.findById(id)];
-                } else if (locationName) {
-                    storage = [Storage.findOne({
-                        locationName
-                    })]
-                } else {
-                    storage = Storage.find({});
-                }
+        storage: getStorage,
 
-                if (!storage) {
-                    throw new GraphQLError("No Storage found.", { extensions: { code: "NOT_FOUND" } });
-                }
-
-                return storage;
-            }
-
-            throw new GraphQLError("Please login", { extensions: { code: "UNAUTHORISED" } });
-
-        },
-
+        //TODO: Implement logic to find all wines in a storage location and the quantity
         allWinesInLocation: async (parent, { locationId }, context) => {
             if (context.user) {
                 throw new GraphQLError("Not yet implemented", { extensions: { code: "NOT_IMPLEMENTED" } });

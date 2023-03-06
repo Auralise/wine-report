@@ -1,6 +1,9 @@
 import { GraphQLError } from "graphql";
 import { Wine } from "../../models/index.js";
 
+import { getIds } from "../../utils/searchHelpers.js";
+
+
 //TODO: A significant amount of searching and filtering needs to be done by this method which is currently not functional. A basic outline is done but further work needs to be done to make this work. 
 export const searchWine = async (parent, { searchTerm, type }, context) => {
     if (context.user) {
