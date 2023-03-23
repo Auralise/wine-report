@@ -2,14 +2,15 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "npm run build && node dist/server.js",
     "start-nobuild": "node dist/server.js",
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "seed": "node seeders/seed.js",
-    "watch": "nodemon src/server.ts"
+    "dev:server": "nodemon --config nodemon.json --exec ./src/server.ts",
+    "dev:debug": "nodemon --config nodemon.json --inspect-brk src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,8 @@
     "mongoose": "^6.8.4"
   },
   "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.5",
     "jest": "^29.5.0",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
