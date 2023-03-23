@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+      "noImplicitAny": false,
+      "noEmitOnError": true,
+      "removeComments": false,
+      "sourceMap": true,
+      "allowJs": true,
+      "esModuleInterop": true,
+      "target": "ES6",
+      "outDir": "dist",
+      "module": "CommonJS",
+      "moduleResolution": "node16",
+      "resolveJsonModule": true,
+      "pretty": true
+    },
+    // explicit path inclusions rather than all-encompassing definition
+    "include": [
+      "src/*",
+      "src/config/*",
+      "src/models/*",
+      "src/schemas/*",
+      "src/seeders/*",
+      "src/utils/*"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+  }
