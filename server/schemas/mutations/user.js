@@ -1,6 +1,8 @@
 import { GraphQLError } from "graphql";
 import { User } from "../../models/index.js";
 
+import { signToken } from "../../utils/auth.js";
+
 export const addUser = async (parent, { name, email, password }) => {
     try {
         if (userValidation(name, email, password)) {

@@ -36,8 +36,6 @@ import {
 
 } from "./mutations/index.js";
 
-import { signToken } from "../utils/auth.js";
-
 const resolvers = {
     Query: {
         users: getAllUsers,
