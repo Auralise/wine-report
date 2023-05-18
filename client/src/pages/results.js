@@ -63,7 +63,7 @@ export default function SearchResults() {
                 <Grid container spacing={2}>
                     {wines.length > 0 ? wines.map((wine) => {
                         return (
-                            <Grid item lg={6} sm={12}>
+                            <Grid key={wine._id} item lg={6} sm={12}>
                                 <WineFragment wine={wine} />
                             </Grid>
                         )

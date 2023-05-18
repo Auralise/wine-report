@@ -35,7 +35,7 @@ export default function WineFragment({ wine }) {
                     <Typography component="p">{wine.region.name}</Typography>
                     {
                         wine.locationStorage.map((loc) => {
-                            return <Typography component="p">Quantity: <strong>{loc.quantity}</strong> in <strong>{loc.location.locationRoom} - {loc.location.locationName}</strong></Typography>
+                            return <Typography key={loc.location.locationRoom+" "+loc.location.locationName} component="p">Quantity: <strong>{loc.quantity}</strong> in <strong>{loc.location.locationRoom} - {loc.location.locationName}</strong></Typography>
 
                         })
                     }
